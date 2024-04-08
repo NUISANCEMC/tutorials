@@ -104,6 +104,13 @@ Then open up a TBrowser with `TBrowser b` and explore the histograms contained t
 
 Note that the example scripts below can be easily modified to take different input fluxes or use different targets, but also note that NUISANCE is not generating these events, the event generators are!
 
+Finally, there are copies of the files generated in this tutorial available here: https://portal.nersc.gov/project/nuisance/tutorial/
+
+If you need, you can download them all from there, or with the command:
+```
+wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/
+```
+
 ### GENIE
 GENIE is one of the most widely used neutrino interaction simulation packages currently used in the field. It can simulate neutrino energies from MeV to PeV scales, and also has support for electron-nucleus scattering, photon-nucleus scattering, pion-nucleus scattering, and even provides support for simulating various dark matter models.
 
@@ -180,6 +187,9 @@ NUISANCE is a conceptually simple package that takes the output of event generat
 
 NUISANCE also links directly to the event reweighting packages provided by the generators, and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
 
+### Using the NUISANCE flat trees
+***Clarence, please drop your old example into some scripts and then describe them here***
+
 ### Making simple data-MC comparisons
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
@@ -219,7 +229,7 @@ And then explore the file with the ROOT TBrowser GUI with:
 ```
 TBrowser b
 ```
-***Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for singularity, but possibly not for docker where X11 forwading is... less seamless***
+***Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for singularity, but possibly not for docker where X11 forwarding is... less seamless***
 
 Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
 
@@ -236,7 +246,7 @@ The output image in both cases is simply a png file: `MINERvA_CC1pi0_XSec_1DTpi_
 ### Fitting parameters
 NUISANCE is also able to vary parameters for you, and find the value of the set of parameters you provide in the card file that minimizes the chi-square test-statistic with respect to the samples you provide in the card file. It will also calculate the postfit covariance matrix, and produce the best fit histograms. This was one of the primary motivations for producing NUISANCE in the first place!
 
-It is possible to implement simple reweighting parameters in NUISANCE for development, but it primarily interfaces with the reweighting packages provided by the generators themselves. E.g., it's not reinventing the wheel, it's a high-level tool which builds on top of the generators, which do all of the heavy lifting!
+It is possible to implement simple reweighting parameters in NUISANCE for development, but it primarily interfaces with the reweighting packages provided by the generators themselves. It's not reinventing the wheel, it's a high-level tool which builds on top of the generators, which do all of the heavy lifting!
 
 To include parameters in the fit, they must be added to the NUISANCE card file with the format:
 ```
