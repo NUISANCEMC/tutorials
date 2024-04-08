@@ -47,7 +47,46 @@ sudo singularity shell --writable <my_sandbox_dir>
 Note that you need to be root to do this, and again, you can also modify your host system as root, which is more dangerous. You won't need the sandbox functionality at all durin gthis tutorial.
 
 ### docker
+Instructions for installing docker can be found here:
 
+The first time you try and use the docker container, it will pull it down from dockerhub and then cache it locally. You can check what has been cached with:
+```
+sudo docker images
+```
+And you can delete all local docker images once you're finished with this tutorial using:
+```
+sudo docker system prune -f --all
+```
+docker files will hang out in unexpected places indefinitely if you don't. I assume if you don't want to remove all docker images, you're familiar enough with docker to do that.
+
+The design usage for docker is a little different to singularity. Most obviously, everything is run as root. But the intended use case is to have persistent images which you enter and then modify the contents of independent of the host system, with explicit copies between container and host whenever you need to transfer something. The usage examples here entirely break that model, and are definitely not a general "how to" for docker.
+
+The equivalent docker command to
+```
+singularity exec <my_container.sif> do_something.exe /path/to/input <arguments>
+```
+is
+```
+sudo docker run --rm -v $(pwd):/output -w /output <container> do_something.exe /path/to/input <arguments>
+```
+with some caveats.
+
+The above arguments the the above command do the following:
+* `--rm` stop the container after the command has executed
+* `-v $(pwd):/output` mount the current working directory to `/output` within the container
+* `-w /output` execute the command in `/output` within the container
+An important caveat is that you don't have access to anywhere on the host machine that isn't the current working directory (but you can add other mountpoints etc if desired).
+
+Another caveat is that docker does not set up X11 forwarding from the container to the host, so opening GUI's from the container will report issues. This is solveable, but is system dependent, so I won't offer a general solution here...
+
+The rest of the tutorial will use singularity for the examples. If you're using docker, you can replace any instance of:
+```
+singularity exec nuisance_nuint2024.sif <...>
+```
+with
+```
+sudo docker run --rm -v $(pwd):/output -w /output nuisancemc/tutorial:nuint2024
+```
 
 ## Running the event generation packages
 Neutrino event generators provide executables for making neutrino events with simple starting conditions, which are sufficient for comparisons to cross-section data. More complicated applications with a full neutrino flux simulation and a realistic detector geometry require dedicated applications, but the experiments that produce data devote a lot of time and effort to account for or simply express, the effect of these, and produce cross-section data which generally does not require specific knowledge of their experiments other than the simplified flux distributions and the target material of interest.
@@ -192,7 +231,9 @@ singularity exec  nuisance_nuint2024.sif root -q -l -b simple_NUISANCE_plotter.C
 The output image in both cases is simply a png file: `MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
 ### Fitting parameters
-NUISANCE is also able to vary parameters for you, and find the value of the set of parameters you provide in the card file that minimizes the chi-square test-statistic with respect to the samples you provide in the card file. It will also calculate the postfit covariance matrix, and produce the best fit histograms.
+NUISANCE is also able to vary parameters for you, and find the value of the set of parameters you provide in the card file that minimizes the chi-square test-statistic with respect to the samples you provide in the card file. It will also calculate the postfit covariance matrix, and produce the best fit histograms. This was one of the primary motivations for producing NUISANCE in the first place!
+
+It is possible to implement simple reweighting parameters in NUISANCE for development, but it primarily interfaces with the reweighting packages provided by the generators themselves. E.g., it's not reinventing the wheel, it's a high-level tool which builds on top of the generators, which do all of the heavy lifting!
 
 To include parameters in the fit, they must be added to the NUISANCE card file with the format:
 ```
@@ -200,7 +241,7 @@ To include parameters in the fit, they must be added to the NUISANCE card file w
 ```
 The low/high variables give the fit range that should be allowed for that parameter. The step variable gives the fitter a hint about how large the expected variation should be, but it will re-optimize the step size itself very quickly. The state parameter can be "FREE", meaning the parameter is included in the fit, or "FIX" meaning that it is not.
 
-You can add any number of parameters to the fit, but the more there are, the more complex the computational problem, and the longer the fit will take to converge. As such, it's challenging to predict how long a fit will take a priori.
+You can add any number of parameters and samples to the fit, but the more there are, the more complex the computational problem, and the longer the fit will take to converge. As such, it's challenging to predict how long a fit will take a priori.
 
 To run a fit with a desired card file, using the `nuismin` program, instead of the usual `nuiscomp` used so far.
 
