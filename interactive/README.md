@@ -48,6 +48,7 @@ Note that you need to be root to do this, and again, you can also modify your ho
 
 ### docker
 Instructions for installing docker on different systems can be found here: https://docs.docker.com/desktop/
+
 (Note that Linux users can install the lighter-weight docker engine here: https://docs.docker.com/engine/install/, but they can also just use singularity...)
 
 The first time you try and use the docker container, it will pull it down from dockerhub and then cache it locally. You can check what has been cached with:
@@ -78,7 +79,7 @@ The above arguments the the above command do the following:
 * `-w /output` execute the command in `/output` within the container
 An important caveat is that you don't have access to anywhere on the host machine that isn't the current working directory (but you can add other mountpoints etc if desired).
 
-Another caveat is that docker does not set up X11 forwarding from the container to the host, so opening GUI's from the container will report issues. This is solveable, but is system dependent, so I won't offer a general solution here...
+Another caveat is that docker does not set up X11 forwarding from the container to the host, so opening GUI's from the container will report issues. This is solveable, but is system dependent, so I won't offer a general solution here. Instead, please ensure that you have a version of ROOT installed locally, for which you can instructions here: https://root.cern/install/
 
 The rest of the tutorial will use singularity for the examples. If you're using docker, you can replace any instance of:
 ```
@@ -88,6 +89,7 @@ with
 ```
 sudo docker run --rm -v $(pwd):/output -w /output nuisancemc/tutorial:nuint2024
 ```
+When examples suggest opening files with ROOT and browsing with ROOT's GUI `TBrowser`, you will need to use your local copy of ROOT instead... or be very confident that you know how to sort out X11 forwarding between the container and your host machine.
 
 ## Running the event generation packages
 Neutrino event generators provide executables for making neutrino events with simple starting conditions, which are sufficient for comparisons to cross-section data. More complicated applications with a full neutrino flux simulation and a realistic detector geometry require dedicated applications, but the experiments that produce data devote a lot of time and effort to account for or simply express, the effect of these, and produce cross-section data which generally does not require specific knowledge of their experiments other than the simplified flux distributions and the target material of interest.
