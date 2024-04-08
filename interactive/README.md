@@ -67,7 +67,7 @@ GENIE is one of the most widely used neutrino interaction simulation packages cu
 
 In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented here: https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf
 
-An example scripts to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `GENIEv3_MINERvA_example.sh`. Run it with a command like (which should take 5-10 minutes):
+An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `GENIEv3_MINERvA_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
 ```
 singularity exec nuisance_nuint2024.sif /bin/bash GENIEv3_MINERvA_example.sh
 ```
@@ -84,32 +84,25 @@ NuWro is a neutrino event generator which is developed to be flexible and includ
 
 A relevant example input file for producing 100k muon neutrino-deuterium interactions using the Argonne Bubble Chamber flux is given in ANL_numu_D2_nuwro.params, which can be run with the following command:
 ```
-singularity exec images/nuwro_19.02.2.sif nuwro -i ANL_numu_D2_nuwro.params -o ANL_numu_D2_nuwro.root
+singularity exec nuisance_nuint2024.sif /bin/bash NUWRO_MINERvA_example.sh
 ```
-Nuwro produces a small number of files for monitoring purposes, but the important output file is specified by the `-o` option, which can be renamed as you wish.
+Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
+*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to ***fully*** read, although native ROOT can probably do okay because the structure is relatively simple
+*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
 
+Note that most of the parameters that govern NuWro's execution are specified in 
 Although the NuWro input file contains a lot of options, the important ones for your purposes are:
-* `number_of_events`: how many events to generate!
+* `number_of_test_events`: how many ***test*** events to generate. This calculates the cross section before generating the events that will be saved, and serves a similar purpose to the GENIE input splines. The larger this number is, the more accurate the results will be. As a rule of thumb (citation definitely needed) >2x the `number_of_events` parameter is used.
+* `number_of_events`: how many ***unweighted*** events to generate
 * `beam_particle`: the PDG code of the incident particle
 * `beam_inputroot`: the file containing the desired flux spectrum
 * `beam_inputroot_flux`: the name of the histogram in the flux file
+* `@target/CH.txt`: this isn't really a parameter, but rather includes a file with multiple parameter that describe the target material. 
 
-And the target type, which is the most confusing part of the NuWro input. For deuterium, there are 4 relevant parameters:
-* `target_type`
-* `nucleus_p`
-* `nucleus_n`
-* `nucleus_target`
-For more complex targets, the correct settings are predefined in the nuwro/data directory, the options can be found with (for example):
+To explore the targets available, and the settings, you can look at the nuwro source code, for example:
 ```
-singularity exec images/nuwro_19.02.2.sif ls /opt/nuwro/data/target
+singularity exec  nuisance_nuint2024.sif cat /opt/nuwro/data/target/CH.txt
 ```
-And the desired option included in the input file with (for example): `@target/CH2.txt`. Note that this is **instead** of the 4 parameters defined for deuterium.
-
-Finally, in order to make the NuWro output file ready for NUISANCE, a quick additional step is needed, as was the case for GENIE:
-```
-singularity exec images/nuwro_19.02.2.sif PrepareNuwro ANL_numu_D2_nuwro.root -F /opt/nuisance/data/flux/ANL_1977_2horn_rescan.root,numu_flux
-```
-This command uses the input histograms used to generate the events, defined in the NuWro input file. It's possible but not necessary to save the output to a different file, rather than modifying the existing NuWro output file with the `-o` option.
 
 ### NEUT
 NEUT is an old neutrino generator originally written in the 1980's for the Kamiokande experiment in Japan. It remains the primary generator used by the Super-Kamiokande and T2K collaborations, and has been semi-continuously developed ever since, but is an old piece of code originally written in pre-standard(!) FORTRAN. There is some documentation, which isn't strictly speaking public, but if you need to know more details, I can provide it. There is no website, and the code is not public, so in order to recreate the singularity container from the definition file provided, you need a couple of additional files which I have provided in this repository.
