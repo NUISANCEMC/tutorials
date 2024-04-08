@@ -47,7 +47,8 @@ sudo singularity shell --writable <my_sandbox_dir>
 Note that you need to be root to do this, and again, you can also modify your host system as root, which is more dangerous. You won't need the sandbox functionality at all durin gthis tutorial.
 
 ### docker
-Instructions for installing docker can be found here:
+Instructions for installing docker on different systems can be found here: https://docs.docker.com/desktop/
+(Note that Linux users can install the lighter-weight docker engine here: https://docs.docker.com/engine/install/, but they can also just use singularity...)
 
 The first time you try and use the docker container, it will pull it down from dockerhub and then cache it locally. You can check what has been cached with:
 ```
