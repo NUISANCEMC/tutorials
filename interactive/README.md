@@ -82,7 +82,7 @@ If you look at the script, you will see that the `NU_PDG` and `TARG` variables a
 ### NUWRO
 NuWro is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
-A relevant example input file for producing 100k muon neutrino-deuterium interactions using the Argonne Bubble Chamber flux is given in ANL_numu_D2_nuwro.params, which can be run with the following command:
+An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `NUWRO_MINERvA_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWRO_LFGRPA.params`, and can be run with the following command (which should take ~1 minute):
 ```
 singularity exec nuisance_nuint2024.sif /bin/bash NUWRO_MINERvA_example.sh
 ```
@@ -105,13 +105,17 @@ singularity exec  nuisance_nuint2024.sif cat /opt/nuwro/data/target/CH.txt
 ```
 
 ### NEUT
-NEUT is an old neutrino generator originally written in the 1980's for the Kamiokande experiment in Japan. It remains the primary generator used by the Super-Kamiokande and T2K collaborations, and has been semi-continuously developed ever since, but is an old piece of code originally written in pre-standard(!) FORTRAN. There is some documentation, which isn't strictly speaking public, but if you need to know more details, I can provide it. There is no website, and the code is not public, so in order to recreate the singularity container from the definition file provided, you need a couple of additional files which I have provided in this repository.
+NEUT is neutrino generator with a long pedigree, originally written in  pre-standard(!) FORTRAN in the 1980's for the Kamiokande experiment in Japan. It remains the primary generator used by the Super-Kamiokande and T2K collaborations, and has been semi-continuously developed ever since. For recent documentation, see: https://arxiv.org/abs/2106.15809
 
-NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included. Generate events with:
+NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate events 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
 ```
-singularity exec images/neut_5.4.1.sif neutroot2 input.card output.root
+singularity exec nuisance_nuint2024.sif /bin/bash NEUT_MINERvA_example.sh
 ```
-Note that the arguments are positional and NEUT doesn't take flags. The output of NEUT is automatically ready for NUISANCE, so no addiitonal `Prepare` step is required. Two example card files are provided, the first, `ANL_numu_D2_NEUT.card`, generates 100,000 muon neutrino-deuterium interactions using the Argonne Bubble Chamber flux as in the other examples. The second, `MiniBooNE_numu_CH2_NEUT.card` generates 100,00 muon neutrino-CH2 interactions using the MiniBooNE experiment flux. Note that CH_2 represents the MiniBooNE mineral oil detector material. Both cards have been provided because a number of settings are required to turn off nuclear effects for deuterium targets in NEUT, which wasn't really designed for such light targets.
+Note that the arguments are positional and NEUT doesn't take flags. The output of NEUT is automatically ready for NUISANCE, so no additional `Prepare` step is required.
+
+The NEUT generation script above produces a few files, but the two files we will use here are:
+*`NEUT570_MINERvA_LE_FHC_numu.root`, this is the `neutroot2` output, which needs correct libraries to read. No `PrepareX` step is necessary as NEUT already stores the histograms used for normalization in NUISANCE (which was originally developed for T2K...).
+*`NEUT570_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
 
 Important parameters you will need to control in the NEUT card files:
 * `EVCT-NEVT`: sets the number of events to generate
@@ -122,7 +126,7 @@ Important parameters you will need to control in the NEUT card files:
 * `NEUT-NUMBNDP`: number of bound protons (e.g., 6 for carbon)
 * `NEUT-NUMFREP`: number of free protons to include
 * `NEUT-NUMATOM`: total number of nucleons (it's redundant but has to be set)
-NEUT is not able to simulate complex molecular targets, just single elements with additional hydrogen components, but that's sufficient for the common targets, and for our purposes.
+`neutroot2` is not able to simulate complex molecular targets, just single elements with additional hydrogen components, but that's sufficient for most purposes. Alternative event generation applications are provided to generate events with more complex targets and geometries.
 
 ### Event reweighting
 All of the generators discussed above have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
@@ -137,36 +141,55 @@ NUISANCE also links directly to the event reweighting packages provided by the g
 ### Making simple data-MC comparisons
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
-A simple example card file input to `nuiscomp` is given by `NUISANCE_ANL_example.card`, which can be run with:
+A simple example XML card file input to `nuiscomp` is given by `NUISANCE_example_with_GENIEv3.card`, which can be run with:
 ```
-singularity exec images/genie_v3.00.06.sif nuiscomp -c NUISANCE_ANL_example_with_GENIEv3.00.06.card -o NUISANCE_ANL_example_with_GENIEv3.00.06.root
+singularity exec nuisance_nuint2024.sif nuiscomp -c NUISANCE_example_with_GENIEv3.card -o NUISANCE_example_with_GENIEv3.root
 ```
-Note that although all containers have NUISANCE in, it's only built against a single generator in each, so won't work unless you run it with the correct container.
+In this example, data and the GENIEv3 files generated above are compared for three MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
 
-In this example, data and GENIE are compared for three ANL measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each experiment! To see all the measurements available, you can run the `nuissamples` executable, and it will tell you all the measurements it knows about. The source code for NUISANCE can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html for future reference.
+You can update the card to use NEUT or NuWro by updating each line from, e.g.:
+```
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="GENIE:GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
+```
+to either:
+```
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root"/>
+```
+or:
+```
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:NEUT570_MINERvA_LE_FHC_numu.root"/>
+```
+
+To see all the measurements available, you can run the `nuissamples` executable, and it will tell you all the measurements it knows about. The source code for NUISANCE can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html for future reference.
+
+Other tags can be added to the card file to change the NUISANCE behaviour. One has been added in this case, the rather mysterious:
+```
+<config UseSVDInverse="1" />
+```
+If run without this line, ***for these measurement*** NUISANCE will refuse to run because the covariance matrix provided with the data is not invertible. This line forces NUISANCE to **approximate** the inversion using Singular Value Decomposition. This might seem drastic, and maybe is, but is extremely common. Most matrices provided by experiments are not invertible!
 
 ### Analyzing the NUISANCE output
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
-singularity exec images/genie_v3.00.06.sif root -l <file_name.root>
+singularity exec nuisance_nuint2024.sif root -l <file_name.root>
 ```
-ROOT interactive sessions use an approximation of C++, but you don't need to use them extensively. You can explore the file with the ROOT TBrowser GUI with:
+And then explore the file with the ROOT TBrowser GUI with:
 ```
 TBrowser b
 ```
-***Note that this opens up a GUI, and will be extremely slow if you do it on NERSC. It would work, but would be incredibly frustrating, so I don't recommend it***
+***Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for singularity, but possibly not for docker where X11 forwading is... less seamless***
 
-Actually any of the singularity containers will do as they all contain ROOT. Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
+Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
 
-I've included two example scripts for producing a simple plot comparing data and simulation for one for the datasets analyzed using the example NUISANCE card file above. The scripts produce identical plots, but one is written in python (2.7), the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
+There are two example scripts for producing a simple plot comparing data and simulation for one for the datasets analyzed using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
 ```
-singularity exec images/root_v5.34.36_pythia6.sif python simple_NUISANCE_plotter.py
+singularity exec  nuisance_nuint2024.sif python3 simple_NUISANCE_plotter.py
 ```
 Or:
 ```
-singularity exec images/root_v5.34.36_pythia6.sif root -q -l -b simple_NUISANCE_plotter.C
+singularity exec  nuisance_nuint2024.sif root -q -l -b simple_NUISANCE_plotter.C
 ```
-The output image in both cases is simply a png file: `ANL_CC1ppip_XSec_1DEnu_nu_GENIEv3.png`.
+The output image in both cases is simply a png file: `MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
 ### Fitting parameters
 NUISANCE is also able to vary parameters for you, and find the value of the set of parameters you provide in the card file that minimizes the chi-square test-statistic with respect to the samples you provide in the card file. It will also calculate the postfit covariance matrix, and produce the best fit histograms.
