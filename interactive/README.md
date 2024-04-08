@@ -1,27 +1,29 @@
 # Interactive NUISANCE tutorials
 
-This is intended to be a repository to facilitate research projects using NUISANCE.
-
-Assuming you have git installed get a local copy of these files with:
+Assuming you have git installed get a local copy of the files in this directory:
 ```
-git clone https://github.com/wilkinson-nu/nuisance_project.git
+git clone https://github.com/NUISANCEMC/tutorials.git nuisance_tutorials
 ```
 If you don't have git, you ***could*** also download a zip file from the green code tab on the front page. But... just install git.
 
-## Singularity
+## Getting and using the tutorial containers
 
-Instructions for installing singularity on linux can be found here: https://sylabs.io/guides/3.5/admin-guide/installation.html
+For these tutorials, we have a docker ***container*** which is hosted on dockerhub and which contains all of the generators, NUISANCE, and all necessary library dependences (such as ROOT). The advantage of using containers is that you don't need to compile all of this software for your system, and everyone is using exactly the same software stack.
 
-All build recipes have been tested with singularity version 3.5.3, although any recent version should be fine.
+Although the containers are built using docker, most container runtime environments are able to run them. For security reasons, although it is a standard for industry use of containers, most HEP computing systems we use do not support docker. There isn't really a standard, and there are several home-grown container ***runtime*** environments for running containers supported by different major HEP computing sites. For this tutorial, we're using singularity as the default option, as it is probably the most common for High Performance Computing sites used in HEP. However, it will not run natively on Mac or Windows machines, so we've provided docker examples as well.
 
-**Note that all singularity commands below may need to be tweaked for Mac and (especially) Windows, the exact syntax is likely to be similar, but I come from a Linux background.**
+You can also use any other container runtime environment you're familiar with that supports docker images. Good luck.
 
+
+### Singularity
+Instructions for installing singularity on linux can be found here: https://sylabs.io/guides/3.10/admin-guide/installation.html
+
+You can obtain the container needed for this tutorial with the command:
 ```
 singularity pull nuisance_nuint2024.sif docker://nuisancemc/tutorial:nuint2024
 ```
+which will get the container from dockerhub, and convert it to a singularity (.sif) image locally. This step needs an internet connection, and will save a ~1 GB file locally on your system.
 
-
-### Running singularity containers
 Singularity containers can be used in a few different ways, and it can get a bit confusing to remember what is in the container, and what is on the host machine. When you run it, the container has access to your home directory (and all subdirectories) and your current working directory, so it can run software from within the container on files from your host machine. Example commands can look like:
 ```
 singularity exec <my_container.sif> do_something.exe /path/to/input <arguments>
@@ -42,42 +44,45 @@ Then you can play around with the sandbox interactively:
 ```
 sudo singularity shell --writable <my_sandbox_dir>
 ```
-Note that you need to be root to do this, and again, you can also modify your host system as root, which is more dangerous. In general, you shouldn't need to use the sandbox functionality at all this during the project.
+Note that you need to be root to do this, and again, you can also modify your host system as root, which is more dangerous. You won't need the sandbox functionality at all durin gthis tutorial.
+
+### docker
+
 
 ## Running the event generation packages
-Neutrino event generators provide executables for making neutrino events with simple starting conditions, which are sufficient for comparisons to cross-section data. More complicated applications with a full neutrino flux simulation and a realistic detector geometry require dedicated applications, but the experiments that produce data devote a lot of time and effort to account for or simply express, the effect of these, and produce cross-section data which does not require specific knowledge of their experiments other than the simplified flux distributions and the target material of interest.
+Neutrino event generators provide executables for making neutrino events with simple starting conditions, which are sufficient for comparisons to cross-section data. More complicated applications with a full neutrino flux simulation and a realistic detector geometry require dedicated applications, but the experiments that produce data devote a lot of time and effort to account for or simply express, the effect of these, and produce cross-section data which generally does not require specific knowledge of their experiments other than the simplified flux distributions and the target material of interest.
 
-A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/nuisance/data/flux/`, and a thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux 
+Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event enerator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
 
-Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event enerator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is therefore very specialized.
+A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/nuisance/data/flux/`, and a thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For all the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA ``low energy'' flux in neutrino-enhanced mode, which is the `numu_fhc` histogram in the file `/opt/nuisance/data/flux/minerva_le_flux.root`. You can inspect this file with ROOT if you would like with:
+```
+singularity exec nuisance_nuint2024.sif root -l /opt/nuisance/data/flux/minerva_le_flux.root
+```
+Then open up a TBrowser with `TBrowser b` and explore the histograms contained through the GUI.
+
+Note that the example scripts below can be easily modified to take different input fluxes or use different targets, but also note that NUISANCE is not generating these events, the event generators are!
 
 ### GENIE
-GENIE is one of the most widely used neutrino interaction simulation packages currently used in the field. It can simulate neutrino energies from MeV to PeV scales, and also has support for electron-nucleus scattering, photon-nucleus scattering, pion-nucleus scattering, and even provides support for simulating various dark matter models. 
+GENIE is one of the most widely used neutrino interaction simulation packages currently used in the field. It can simulate neutrino energies from MeV to PeV scales, and also has support for electron-nucleus scattering, photon-nucleus scattering, pion-nucleus scattering, and even provides support for simulating various dark matter models.
 
 In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented here: https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf
 
-Example scripts to generate 100,000 muon neutrino-deuterium interactions using the Argonne Bubble Chamber flux are given in:
-* GENIE v2.12.10: ANL_numu_D2_GENIE_v2.12.10.sh
-* GENIE v3.00.06: ANL_numu_D2_GENIE_v3.00.06.sh
+An example scripts to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `GENIEv3_MINERvA_example.sh`. Run it with a command like (which should take 5-10 minutes):
+```
+singularity exec nuisance_nuint2024.sif /bin/bash GENIEv3_MINERvA_example.sh
+```
+There will be a few output files produced:
+* `GENIEv3_AR23_MINERvA_LE_FHC_numu.root`, the gevgen output in GENIE's GHEP format, requires the correct libraries to read
+* `GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root`: the output from NUISANCE's `PrepareGenie`, which adds the flux and total event rate histograms to make normalization easier
+* `GENIEv3_AR23_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
+we'll use the second two of these output files later on in the tutorial.
 
-Either file can be run with singularity:
-```
-singularity exec images/genie_v2.12.10.sif /bin/sh ANL_numu_D2_GENIE_v2.12.10.sh
-```
-Or equivalently with shifter on NERSC:
-```
-shifter -V ${PWD}:/output --entrypoint --image=docker:wilkinsonnu/nuisance_project:genie_v2.12.10 /bin/sh ANL_numu_D2_GENIE_v2.12.10.sh
-```
-There will be a few output files produced, but the important one is given by the `outFileName` variable in the script. This script can be used as a basis for generating events on different targets, with different fluxes, and even with different GENIE models.
-
-Note that as well as calling `gevgen`, the scripts contain a second step using `PrepareGENIE`, which is actually a NUISANCE utility to make the output file ready for use in NUISANCE, it simply calculates the total cross section (required for normalization) before running any comparison tools. This factorization is done for for speed. A second relevant output file, which has a similar name to the first, but will end in `_NUIS.root` is ready for NUISANCE!
-
-If you look at the script, you may notice that the `nuType` and `TARG` variables are numeric codes, which follow the Particle Data Group's (PDG) convention for labeling particles: https://pdg.lbl.gov/2019/reviews/rpp2019-rev-monte-carlo-numbering.pdf. The PDG code for a muon neutrino is 14, so you can see that in this example, we're using an incident muon neutrino. The PDG code for a deuterium nucleus is 1000010020, so you can see we're using a deuterium target in this example. All generators use the same PDG conventions for labeling particles, so it's a bit confusing at first, but you get used to it.
+If you look at the script, you will see that the `NU_PDG` and `TARG` variables are numeric codes, which follow the Particle Data Group's (PDG) convention for labeling particles: https://pdg.lbl.gov/2019/reviews/rpp2019-rev-monte-carlo-numbering.pdf. The PDG code for a muon neutrino is 14, so you can see that in this example, we're using an incident muon neutrino. The PDG code for a carbon nucleus is 11000060120, and for a hydrogen nucleus is 1000010010. In this example, we have `TARG=1000060120[0.9231],1000010010[0.0769]`. The actual target is C_8H_8, so 12/13 carbon and 1/13 hydrogen by the number of nucleons. All generators use the same PDG conventions for labeling particles, you get used to it.
 
 ### NUWRO
 NuWro is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
-A relevant example input file for producing 100,000 muon neutrino-deuterium interactions using the Argonne Bubble Chamber flux is given in ANL_numu_D2_nuwro.params, which can be run with the following command:
+A relevant example input file for producing 100k muon neutrino-deuterium interactions using the Argonne Bubble Chamber flux is given in ANL_numu_D2_nuwro.params, which can be run with the following command:
 ```
 singularity exec images/nuwro_19.02.2.sif nuwro -i ANL_numu_D2_nuwro.params -o ANL_numu_D2_nuwro.root
 ```
