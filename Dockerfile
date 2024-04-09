@@ -14,8 +14,8 @@ RUN adduser --disabled-password \
     ${NB_USER}
 WORKDIR ${HOME}
 
-ADD start /usr/bin/
-COPY notebooks ${HOME}/notebooks/
-COPY interactive ${HOME}/interactive/
-COPY interactive/README.md ${HOME}/
-ADD iop_file_snapshot.sh ${HOME}/bin/
+ADD --chown=${NB_USER} start /usr/bin/
+COPY --chown=${NB_USER} notebooks ${HOME}/notebooks/
+COPY --chown=${NB_USER} interactive ${HOME}/interactive/
+COPY --chown=${NB_USER} interactive/README.md ${HOME}/
+ADD --chown=${NB_USER} iop_file_snapshot.sh ${HOME}/
