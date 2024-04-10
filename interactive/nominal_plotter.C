@@ -97,7 +97,7 @@ void make_basic_plot(std::string input_file_name, std::string measurement_name, 
 
 // ROOT CINT expects a function with the same name as the script
 // A feature is that subsequent command line arguments are passed to this function
-void simple_NUISANCE_plotter(){
+void nominal_plotter(){
 
   std::string input_file_name  = "NUISANCE_example_with_GENIEv3.root";
   std::string measurement_name = "MINERvA_CC1pi0_XSec_1DTpi_nu";
