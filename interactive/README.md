@@ -139,7 +139,7 @@ If you look at the script, you will see that the `NU_PDG` and `TARG` variables a
 
 Also, there is a `--cross-section` argument to `gevgen`, which takes a mysterious file in `MC_inputs`. This file includes pre-calculated "splines" as a function of true neutrino energy, broken down into all of the processes that have been included in the GENIE model, for a variety of targets and neutrino flavors. You can use a GENIE utility `gspl2root` to extract these splines into ROOT TGraphs, for easy plotting or inspection. An example command is:
 ```
-singularity exec nuisance_nuint2024.sif gspl2root -f MC_inputs/AR23_20i_00_000_v340_splines.xml.gz -p 14,-14 -t 1000060120 -e 10 --tune AR23_20i_00_000 -o AR23_20i_00_000_splines.root
+singularity exec nuisance_nuint2024.sif gspl2root -f MC_inputs/AR23_20i_00_000_splines.xml.gz -p 14,-14 -t 1000060120 -e 10 --tune AR23_20i_00_000 -o AR23_20i_00_000_splines.root
 ```
 which can be explored with:
 ```

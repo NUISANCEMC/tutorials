@@ -26,7 +26,7 @@ E_MAX=50
 ## pre-calculated cross-section "splines" used to massively reduce
 ## The necessary computational time required.
 TUNE=AR23_20i_00_000
-XSEC_SPLINES=MC_inputs/${TUNE}_v340_splines.xml.gz
+XSEC_SPLINES=MC_inputs/${TUNE}_splines.xml.gz
 
 ## The output file name
 OUTFILE=MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu.root
