@@ -7,5 +7,5 @@
 
   <config GENIETune="AR23_20i_00_000" />
   <config UseSVDInverse="1" />
-  <config drawopts="MC|DATA|MODES|COV|INVCOV" />
+  <config drawopts="MC|DATA|COV|INVCOV" />
 </nuisance>

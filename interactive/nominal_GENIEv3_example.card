@@ -4,5 +4,5 @@
   <sample name="MINERvA_CC1pi0_XSec_1DTpi_nu"       input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
 
   <config UseSVDInverse="1" />
-  <config drawopts="MC|DATA|MODES|COV|INVCOV" />
+  <config drawopts="MC|DATA|COV|INVCOV" />
 </nuisance>
