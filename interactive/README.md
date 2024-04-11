@@ -174,10 +174,11 @@ singularity exec nuisance_nuint2024.sif root -l AR23_20i_00_000_splines.root
 For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf).
 
 A few different spline files have been included for different available GENIE "tunes", which you can try to use to compare and contrast the differences:
-* `AR23_20i_00_000`, `AR23_20i_00_000_splines.xml.gz`
-* `CRPA21_04a_00_000`, `CRPA21_04a_00_000_splines.xml.gz`
-* `G18_10a_00_000`, `G18_10a_00_000_splines.xml.gz`
-* `G21_11a_00_000`, `G21_11a_00_000_splines.xml.gz` 
+* `AR23_20i_00_000`: `AR23_20i_00_000_splines.xml.gz`
+* `CRPA21_04a_00_000`: `CRPA21_04a_00_000_splines.xml.gz`
+* `G18_10a_00_000`: `G18_10a_00_000_splines.xml.gz`
+* `G21_11a_00_000`: `G21_11a_00_000_splines.xml.gz`
+In these files, splines are available for the targets hydrogen, carbon, oxygen and argon, for all neutrino flavors.
 
 For full information on the physics content of the tunes, refer to https://hep.ph.liv.ac.uk/~costasa/genie/tunes.html, where you can also find details on other available tunes!
 
