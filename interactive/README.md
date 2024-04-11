@@ -330,10 +330,13 @@ To run a fit with a desired card file, using the `nuismin` program, instead of t
 singularity exec nuisance_nuint2024.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
 ```
 
-The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions:
-*<sample_name>_MC: as before, but it now contains the bestfit histogram!
-*<sample_name>_data: the data provided for this sample
-*<sample_name>_MODES_*: the best fit prediction broken up into interaction modes
-*<
+The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions/modifications:
+*<sample_name>_MC: as before, but it now contains the best-fit histogram!
+*fit_iterations: a ROOT TTree containing entires for each iteration of the fit, including the chi-square for each sample included and the parameter values
+*fit_result: a ROOT TTree with summary information describing the fit configuration and the best-fit information
+*Various summary histograms which are simple copies of information in the `fit_result` tree
+*covariance (covariance_free): the covariance matrix between postfit parameters (with fixed parameters removed)
+*correlation (correlation_free): the correlation matrix between postfit parameters (with fixed parameters removed)
+*decomposition (decomposition_free): the Cholesky decomposition of the covariance matrix between postfit parameters (with fixed parameters removed)
 
 where <sample_name> is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
