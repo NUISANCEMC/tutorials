@@ -254,7 +254,7 @@ To include a parameter variation, a line can be added to the NUISANCE card file 
 ```
 where this changes the value of a "genie_parameter" (meaning [GENIEReWeight]{https://github.com/GENIE-MC/Reweight}) called "MaCCRES" (the axial mass value for the CC-resonant axial form factor), to -0.5, where the meaning of -0.5 is interpreted by the reweighting package.
 
-In the case of GENIE, and most other reweighting packaged, the reweighted dial value can be calculated with $V = N*(1 + R*S)$ where $V$ is the new value, $N$ is the nominal value, $R$ is the reweighting factor (e.g. -0.5 in this example), and $S$ is the $\pm$1 $\sigma$ shift value. It can be challenging to look up $N$ and $S$, and generally requires generator specific knowledge.
+In the case of GENIE, and most other reweighting packaged, the reweighted dial value can be calculated with $V = N \times (1 + R \times S)$ where $V$ is the new value, $N$ is the nominal value, $R$ is the reweighting factor (e.g. -0.5 in this example), and $S$ is the $\pm$1 $\sigma$ shift value. It can be challenging to look up $N$ and $S$, and generally requires generator specific knowledge.
 
 These may also change based on the model used to initially generate the events, which must be known at runtime. For the case of GENIE, this means telling NUISANCE what GENIE tune was used (which then tells GENIERW how to configure itself), by adding a line to the card file, for example:
 ```
@@ -283,18 +283,32 @@ singularity exec  nuisance_nuint2024.sif root -q -l -b dial_validation_plotter.C
 ```
 The output image in both cases is a png image showing how the $\pm$1$\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
-### Fitting parameters
-NUISANCE is also able to vary specified parameters in order the find the values of those parameters that minimizes the chi-square test-statistic with respect to a desired set of samples. The hard work is all It will also calculate the postfit covariance matrix, and produce the best fit histograms. This was one of the primary motivations for producing NUISANCE in the first place!
+Any number of parameters can be set, as long as they can be applied to the samples included in the card file. For example, you might want to include reweightale parameters from GENIE, and also include reweighting parameters in experiment-specific reweighting packages which are designed to work with GENIE. Each dial will calculate a weight for some or all events --- when multiple dials are included, the weight that will be stored for each event (and used to fill the summary histograms we're looking at in the example), will be the product of the weights from each dial.
 
-The fitting itself is just 
+### Fitting parameters
+NUISANCE is also able to vary specified parameters and find the values of those parameters that minimizes the chi-square test-statistic with respect to a desired set of samples. It will also calculate the postfit covariance matrix, and produce the best fit histograms, as well as storing a lot of information about the fit. The fitting itself is carried out by MINUIT by default. Again, NUISANCE isn't re-inventing the wheel!
 
 To include parameters in the fit, they must be added to the NUISANCE card file with the format:
 ```
-  <parameter name="NXSec_CA5RES" nominal="-0.04951" type="t2k_parameter" low="-0.5" high="0.5" step="0.1" state="FREE" />
+ <parameter name="MaCCRES" nominal="0" type="genie_parameter"low="-1" high="5" step="0.1" state="FREE" />
 ```
-The low/high variables give the fit range that should be allowed for that parameter. The step variable gives the fitter a hint about how large the expected variation should be, but it will re-optimize the step size itself very quickly. The state parameter can be "FREE", meaning the parameter is included in the fit, or "FIX" meaning that it is not.
+This adds a few more fields to the parameter line(s) of the card file with respect to previous examples:
+*low: the minimum value that the parameter is allowed to take in the fit
+*high: the maxmimum value that the parameter is allowed to take in the fit
+*step: gives the fitter a hint about how large the expected variation should be, but it will re-optimize the step size itself very quickly
+*state: can be "FREE", meaning it varies in the fit, or "FIX" (default) meaning it is not
 
-You can add any number of parameters and samples to the fit, but the more there are, the more complex the computational problem, and the longer the fit will take to converge. As such, it's challenging to predict how long a fit will take a priori.
+Again, you can add any number of parameters and samples to the fit, but the more there are, the more complex the computational problem, and the longer the fit will take to converge. As such, it's challenging to predict how long a fit will take a priori. Note that for each iteration of the fit, NUISANCE by default will loop over all events in all of the input files required to process the samples, and calculate a weight for each. It will skip events that don't enter any of the requested samples after the first iteration for speed.
 
-To run a fit with a desired card file, using the `nuismin` program, instead of the usual `nuiscomp` used so far.
+To run a fit with a desired card file, using the `nuismin` program, instead of the usual `nuiscomp` used so far. An example card file for running a simple fit with a single free GENIE parameter `MaCCRES`, and a single MINERvA data sample, is given in `fit_GENIEv3_example.card`, which can be processed with:
+```
+singularity exec nuisance_nuint2024.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
+```
 
+The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions:
+*<sample_name>_MC: as before, but it now contains the bestfit histogram!
+*<sample_name>_data: the data provided for this sample
+*<sample_name>_MODES_*: the best fit prediction broken up into interaction modes
+*<
+
+where <sample_name> is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
