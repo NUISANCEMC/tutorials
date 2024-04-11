@@ -105,13 +105,40 @@ Neutrino event generators provide executables for making neutrino events with si
 
 Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event enerator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
 
-A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/nuisance/data/flux/`, and a thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For all the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA ``low energy'' flux in neutrino-enhanced mode, which is the `numu_fhc` histogram in the file `/opt/nuisance/data/flux/minerva_le_flux.root`. You can inspect this file with ROOT if you would like with:
+A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/nuisance/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA ``low energy'' flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/nuisance/data/flux/minerva_le_flux.root`. I've also made a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
+
+You can inspect this file with ROOT if you would like with:
 ```
-singularity exec nuisance_nuint2024.sif root -l /opt/nuisance/data/flux/minerva_le_flux.root
+singularity exec nuisance_nuint2024.sif root -l MC_inputs/minerva_le_flux.root
+```
+or if you're using a local version of root.
+```
+root -l  MC_inputs/minerva_le_flux.root
 ```
 Then open up a TBrowser with `TBrowser b` and explore the histograms contained through the GUI.
 
 Note that the example scripts below can be easily modified to take different input fluxes or use different targets, but also note that NUISANCE is not generating these events, the event generators are!
+
+Fluxes you might want to play with (included in `MC_inputs` for this tutorial) are:
+* T2K ND280 (anti)neutrino-enhanced: `t2kflux_2016_plus250kA.root` (`t2kflux_2016_minus250kA.root`)
+  + `enu_nd280_numu`: $\nu_{\mu}$ flux at the ND280
+  + `enu_nd280_numub`: $\bar{\nu}_{\mu}$ flux at the ND280
+  + `enu_nd280_nue`: $\nu_{e}$ flux at the ND280
+  + `enu_nd280_nueb`: $\bar{\nu}_{e}$ flux at the ND280  
+* DUNE near detector: `DUNE_OptimizedEngineeredNov2017_REGULAR.root`
+  + `numu_NDFHC_flux`: $\nu_{\mu}$ flux at the near detector in neutrino-enhanced mode
+  + `numubar_NDFHC_flux`: $\bar{\nu}_{\mu}$ flux at the near detector in neutrino-enhanced mode
+  + `nue_NDFHC_flux`: $\nu_{e}$ flux at the near detector in neutrino-enhanced mode
+  + `nuebar_NDFHC_flux`: $\bar{\nu}_{e}$ flux at the near detector in neutrino-enhanced mode
+  + Replace `FHC` for `RHC` for anti-neutrino-enhanced mode
+* MINERvA LE:
+  + `numu_fhc`: $\nu_{\mu}$ flux at the near detector in neutrino-enhanced mode
+  + `numubar_fhc`: $\bar{\nu}_{\mu}$ flux at the near detector in neutrino-enhanced mode
+  + `nue_fhc`: $\nu_{e}$ flux at the near detector in neutrino-enhanced mode
+  + `nuebar_fhc`: $\bar{\nu}_{e}$ flux at the near detector in neutrino-enhanced mode
+  + Replace `fhc` for `rhc` for anti-neutrino-enhanced mode
+
+Note that *some* cross-section results have custom flux tunings and don't use these "nominal" fluxes. 
 
 Finally, there are copies of the files generated in this tutorial available here: https://portal.nersc.gov/project/nuisance/tutorial/
 
@@ -146,6 +173,14 @@ which can be explored with:
 singularity exec nuisance_nuint2024.sif root -l AR23_20i_00_000_splines.root
 ```
 For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf).
+
+A few different spline files have been included for different available GENIE "tunes", which you can try to use to compare and contrast the differences:
+* `AR23_20i_00_000`, `AR23_20i_00_000_splines.xml.gz`
+* `CRPA21_04a_00_000`, `CRPA21_04a_00_000_splines.xml.gz`
+* `G18_10a_00_000`, `G18_10a_00_000_splines.xml.gz`
+* `G21_11a_00_000`, `G21_11a_00_000_splines.xml.gz` 
+
+For full information on the physics content of the tunes, refer to https://hep.ph.liv.ac.uk/~costasa/genie/tunes.html, where you can also find details on other available tunes!
 
 ### NUWRO
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
