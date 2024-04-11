@@ -29,7 +29,7 @@ TUNE=AR23_20i_00_000
 XSEC_SPLINES=MC_inputs/${TUNE}_v340_splines.xml.gz
 
 ## The output file name
-OUTFILE=GENIEv3_AR23_MINERvA_LE_FHC_numu.root
+OUTFILE=MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu.root
 
 ## This uses GENIE's gevgen application
 echo "Starting gevgen..."

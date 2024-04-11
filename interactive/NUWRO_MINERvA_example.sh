@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## The output file name
-OUTFILE=NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root
+OUTFILE=MC_outputs/NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root
 
 ## The file that sets all physics parameters for the nuwro simulations
 INCARD=${PWD}/MC_inputs/MINERvA_LE_numu_NUWRO_LFGRPA.params

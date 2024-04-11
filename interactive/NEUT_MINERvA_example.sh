@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## The output file name
-OUTFILE=NEUT570_MINERvA_LE_FHC_numu.root
+OUTFILE=MC_outputs/NEUT570_MINERvA_LE_FHC_numu.root
 
 ## The file that sets physics parameters for the NEUT simulation
 INCARD=${PWD}/MC_inputs/MINERvA_LE_numu_NEUT.card
