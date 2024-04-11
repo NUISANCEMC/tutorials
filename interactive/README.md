@@ -255,7 +255,6 @@ Inside the file you'll find a number of ROOT objects:
 *<sample_name>_COV: the covariance between data points (again provided by the experiment)
 *<sample_name>_INVCOV: the inverse of the covariance (note that with SVD included, this is not exact!)
 *<sample_name>_Chi2NMinusOne: the chi-square calculated between data and MC if bin x is omitted from the calculation
-*<sample_name>_RESIDUAL: definitely something...
 (Where `<sample_name>` can be any of the samples requested in the card file)
 
 There are two example scripts for producing a simple plot comparing data and simulation for one for the datasets analyzed using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
