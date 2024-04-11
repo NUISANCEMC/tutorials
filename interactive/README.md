@@ -247,14 +247,14 @@ TBrowser b
 Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
 
 Inside the file you'll find a number of ROOT objects:
-*likelihood_hist: the chi-square calculated between the data and MC, summarized for all samples
-*ndof_hist: the number of degrees of freedom for each data sample, summarized
-*likedivndof_hist: the ratio of the two above
-*<sample_name>_data: the real data provided by an experiment
-*<sample_name>_MC: the Monte Carlo prediction suitable to compare with the data
-*<sample_name>_COV: the covariance between data points (again provided by the experiment)
-*<sample_name>_INVCOV: the inverse of the covariance (note that with SVD included, this is not exact!)
-*<sample_name>_Chi2NMinusOne: the chi-square calculated between data and MC if bin x is omitted from the calculation
+* `likelihood_hist`: the chi-square calculated between the data and MC, summarized for all samples
+* `ndof_hist`: the number of degrees of freedom for each data sample, summarized
+* `likedivndof_hist`: the ratio of the two above
+* `<sample_name>_data`: the real data provided by an experiment
+* `<sample_name>_MC`: the Monte Carlo prediction suitable to compare with the data
+* `<sample_name>_COV`: the covariance between data points (again provided by the experiment)
+* `<sample_name>_INVCOV`: the inverse of the covariance (note that with SVD included, this is not exact!)
+* `<sample_name>_Chi2NMinusOne`: the chi-square calculated between data and MC if bin x is omitted from the calculation
 (Where `<sample_name>` can be any of the samples requested in the card file)
 
 There are two example scripts for producing a simple plot comparing data and simulation for one for the datasets analyzed using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
@@ -330,12 +330,12 @@ singularity exec nuisance_nuint2024.sif nuismin -c fit_GENIEv3_example.card -o f
 ```
 
 The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions/modifications:
-*<sample_name>_MC: as before, but it now contains the best-fit histogram!
-*fit_iterations: a ROOT TTree containing entires for each iteration of the fit, including the chi-square for each sample included and the parameter values
-*fit_result: a ROOT TTree with summary information describing the fit configuration and the best-fit information
-*Various summary histograms which are simple copies of information in the `fit_result` tree
-*covariance (covariance_free): the covariance matrix between postfit parameters (with fixed parameters removed)
-*correlation (correlation_free): the correlation matrix between postfit parameters (with fixed parameters removed)
-*decomposition (decomposition_free): the Cholesky decomposition of the covariance matrix between postfit parameters (with fixed parameters removed)
+* `<sample_name>_MC`: as before, but it now contains the best-fit histogram!
+* `fit_iterations`: a ROOT TTree containing entires for each iteration of the fit, including the chi-square for each sample included and the parameter values
+* `fit_result`: a ROOT TTree with summary information describing the fit configuration and the best-fit information
+* `covariance` (`covariance_free`): the covariance matrix between postfit parameters (with fixed parameters removed)
+* `correlation` (`correlation_free`): the correlation matrix between postfit parameters (with fixed parameters removed)
+* `decomposition` (`decomposition_free`): the Cholesky decomposition of the covariance matrix between postfit parameters (with fixed parameters removed)
+* + Various summary histograms which are simple copies of information in the `fit_result` tree
 
-where <sample_name> is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
+where `<sample_name>` is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
