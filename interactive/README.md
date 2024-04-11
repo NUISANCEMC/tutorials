@@ -125,9 +125,9 @@ wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/
 
 In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented here: https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf
 
-An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `GENIEv3_MINERvA_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
+An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `generation_GENIEv3_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
 ```
-singularity exec nuisance_nuint2024.sif /bin/bash GENIEv3_MINERvA_example.sh
+singularity exec nuisance_nuint2024.sif /bin/bash generation_GENIEv3_example.sh
 ```
 There will be a few output files produced:
 * `GENIEv3_AR23_MINERvA_LE_FHC_numu.root`, the gevgen output in GENIE's GHEP format, requires the correct libraries to read
@@ -140,9 +140,9 @@ If you look at the script, you will see that the `NU_PDG` and `TARG` variables a
 ### NUWRO
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
-An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `NUWRO_MINERvA_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWRO_LFGRPA.params`, and can be run with the following command (which should take ~1 minute):
+An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWRO_LFGRPA.params`, and can be run with the following command (which should take ~1 minute):
 ```
-singularity exec nuisance_nuint2024.sif /bin/bash NUWRO_MINERvA_example.sh
+singularity exec nuisance_nuint2024.sif /bin/bash generation_NUWRO_example.sh
 ```
 Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
 *`NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to ***fully*** read, although native ROOT can probably do okay because the structure is relatively simple
@@ -167,7 +167,7 @@ singularity exec  nuisance_nuint2024.sif cat /opt/nuwro/data/target/CH.txt
 
 NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate events 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
 ```
-singularity exec nuisance_nuint2024.sif /bin/bash NEUT_MINERvA_example.sh
+singularity exec nuisance_nuint2024.sif /bin/bash generation_NEUT_example.sh
 ```
 Note that the arguments are positional and NEUT doesn't take flags. The output of NEUT is automatically ready for NUISANCE, so no additional `Prepare` step is required.
 
@@ -210,15 +210,15 @@ In this example, data and the GENIEv3 files generated above are compared for thr
 
 You can update the card to use NEUT or NuWro by updating each line from, e.g.:
 ```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="GENIE:GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
 ```
 to either:
 ```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root"/>
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:MC_outputs/NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root"/>
 ```
 or:
 ```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:NEUT570_MINERvA_LE_FHC_numu.root"/>
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:MC_outputs/NEUT570_MINERvA_LE_FHC_numu.root"/>
 ```
 
 To see all the measurements available, you can run the `nuissamples` executable, and it will tell you all the measurements it knows about. The source code for NUISANCE can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html for future reference.
@@ -278,8 +278,8 @@ Finally, one can also change the meaning of the dial value change to be as a fra
 
 To see the utility of this reweighting in action, there are two example card files, with a positive and negative 1$\sigma$ shift to `MaCCRES` which can generate output with the commands:
 ```
-singularity exec nuisance_nuint2024.sif nuiscomp -c negMaCCRES_GENIEv3_example.card -o negMaCCRES_GENIEv3_example.root
-singularity exec nuisance_nuint2024.sif nuiscomp -c posMaCCRES_GENIEv3_example.card -o posMaCCRES_GENIEv3_example.root
+singularity exec nuisance_nuint2024.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
+singularity exec nuisance_nuint2024.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
 ```
 
 And then the scripts `dial_validation_plotter.C` or `dial_validation_plotter.py` both make validation plots showing the impact of those shifts on the predictions for the MINERvA samples of interest. Run these with either:
