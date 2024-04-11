@@ -18,9 +18,9 @@ void make_basic_plot(std::string input_file_name, std::string measurement_name, 
   gStyle->SetOptFit(0);
   TGaxis::SetMaxDigits(3);
   
-  gStyle->SetTextSize(0.07);
-  gStyle->SetLabelSize(0.06,"xyzt");
-  gStyle->SetTitleSize(0.07,"xyzt");
+  gStyle->SetTextSize(0.06);
+  gStyle->SetLabelSize(0.05,"xyzt");
+  gStyle->SetTitleSize(0.06,"xyzt");
   
   gStyle->SetPadTickX(1);
   gStyle->SetPadTickY(1);
@@ -83,7 +83,7 @@ void make_basic_plot(std::string input_file_name, std::string measurement_name, 
   leg ->Draw("SAME");
 
   // Make the borders sensible
-  gPad ->SetRightMargin(0.02);
+  gPad ->SetRightMargin(0.03);
   gPad ->SetTopMargin(0.2);
   gPad ->SetBottomMargin(0.15);
   gPad ->SetLeftMargin(0.15);
