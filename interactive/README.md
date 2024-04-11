@@ -19,7 +19,7 @@ This will download ~1.6 GB of files to `MC_outputs` inside the git repo.
 
 For these tutorials, we have a docker *container* which is hosted on dockerhub and which contains all of the generators, NUISANCE, and all necessary library dependences (such as ROOT). The advantage of using containers is that you don't need to compile all of this software for your system, and everyone is using exactly the same software stack.
 
-Although the containers are built using docker, most container runtime environments are able to run them. For security reasons, although it is a standard for industry use of containers, most HEP computing systems we use do not support docker. There isn't really a standard, and there are several home-grown container ***runtime*** environments for running containers supported by different major HEP computing sites. For this tutorial, we're using singularity as the default option, as it is probably the most common for High Performance Computing sites used in HEP. However, it will not run natively on Mac or Windows machines, so we've provided docker examples as well.
+Although the containers are built using docker, most container runtime environments are able to run them. For security reasons, although it is a standard for industry use of containers, most HEP computing systems we use do not support docker. There isn't really a standard, and there are several home-grown container *runtime* environments for running containers supported by different major HEP computing sites. For this tutorial, we're using singularity as the default option, as it is probably the most common for High Performance Computing sites used in HEP. However, it will not run natively on Mac or Windows machines, so we've provided docker examples as well.
 
 You can also use any other container runtime environment you're familiar with that supports docker images. Good luck.
 
@@ -136,6 +136,16 @@ There will be a few output files produced:
 we'll use the second two of these output files later on in the tutorial.
 
 If you look at the script, you will see that the `NU_PDG` and `TARG` variables are numeric codes, which follow the Particle Data Group's (PDG) convention for labeling particles: https://pdg.lbl.gov/2019/reviews/rpp2019-rev-monte-carlo-numbering.pdf. The PDG code for a muon neutrino is 14, so you can see that in this example, we're using an incident muon neutrino. The PDG code for a carbon nucleus is 11000060120, and for a hydrogen nucleus is 1000010010. In this example, we have `TARG=1000060120[0.9231],1000010010[0.0769]`. The actual target is C_8H_8, so 12/13 carbon and 1/13 hydrogen by the number of nucleons. All generators use the same PDG conventions for labeling particles, you get used to it.
+
+Also, there is a `--cross-section` argument to `gevgen`, which takes a mysterious file in `MC_inputs`. This file includes pre-calculated "splines" as a function of true neutrino energy, broken down into all of the processes that have been included in the GENIE model, for a variety of targets and neutrino flavors. You can use a GENIE utility `gspl2root` to extract these splines into ROOT TGraphs, for easy plotting or inspection. An example command is:
+```
+singularity exec nuisance_nuint2024.sif gspl2root -f MC_inputs/AR23_20i_00_000_v340_splines.xml.gz -p 14,-14 -t 1000060120 -e 10 --tune AR23_20i_00_000 -o AR23_20i_00_000_splines.root
+```
+which can be explored with:
+```
+singularity exec nuisance_nuint2024.sif root -l AR23_20i_00_000_splines.root
+```
+For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf).
 
 ### NUWRO
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
@@ -336,6 +346,6 @@ The output file `fit_GENIEv3_example.root` contains a lot of the same informatio
 * `covariance` (`covariance_free`): the covariance matrix between postfit parameters (with fixed parameters removed)
 * `correlation` (`correlation_free`): the correlation matrix between postfit parameters (with fixed parameters removed)
 * `decomposition` (`decomposition_free`): the Cholesky decomposition of the covariance matrix between postfit parameters (with fixed parameters removed)
-* + Various summary histograms which are simple copies of information in the `fit_result` tree
+* +Various summary histograms which are simple copies of information in the `fit_result` tree
 
 where `<sample_name>` is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
