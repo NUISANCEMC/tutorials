@@ -6,6 +6,15 @@ git clone https://github.com/NUISANCEMC/tutorials.git nuisance_tutorials
 ```
 If you don't have git, you *could* also download a zip file from the green code tab on the front page. But... just install git.
 
+All of the work will be done within `nuisance_tutorials/interactive`.
+
+## Pre-made example files:
+Many of the generator input files will be made within the tutorial, but we have prepared a few high-statistics files in advance for some exercises. These can be obtained by sourcing the script:
+```
+source download_files_forNuSTEC2024.sh
+```
+This will download ~1.6 GB of files to `MC_outputs` inside the git repo.
+
 ## Getting and using the tutorial containers
 
 For these tutorials, we have a docker *container* which is hosted on dockerhub and which contains all of the generators, NUISANCE, and all necessary library dependences (such as ROOT). The advantage of using containers is that you don't need to compile all of this software for your system, and everyone is using exactly the same software stack.
