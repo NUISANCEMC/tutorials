@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<nuisance>
+    <sample name="MINERvA_CC1pip_XSec_1DTpi_nu_2017" input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root" />
+    <sample name="MINERvA_CC1pi0_XSec_1DTpi_nu" input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root" />
+    <parameter name="MaCCRES" type="genie_parameter" nominal="0" low="-1" high="5" step="0.1" state="FREE" />
+    <config GENIETune="AR23_20i_00_000" />
+    <config setabstwk="1" />
+    <config UseSVDInverse="1" />
+</nuisance>
