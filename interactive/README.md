@@ -273,16 +273,15 @@ singularity exec nuisance_nuint2024.sif nuiscomp -c negMaCCRES_GENIEv3_example.c
 singularity exec nuisance_nuint2024.sif nuiscomp -c posMaCCRES_GENIEv3_example.card -o posMaCCRES_GENIEv3_example.root
 ```
 
-And then the scripts `dial_validation_example.C` or `dial_validation_example.py` both make validation plots showing the impact of those shifts on the predictions for the MINERvA samples of interest. Run these with either:
+And then the scripts `dial_validation_plotter.C` or `dial_validation_plotter.py` both make validation plots showing the impact of those shifts on the predictions for the MINERvA samples of interest. Run these with either:
 ```
-singularity exec  nuisance_nuint2024.sif python3 dial_validation_example.py
+singularity exec  nuisance_nuint2024.sif python3 dial_validation_plotter.py
 ```
 Or:
 ```
-singularity exec  nuisance_nuint2024.sif root -q -l -b dial_validation_example.C
+singularity exec  nuisance_nuint2024.sif root -q -l -b dial_validation_plotter.C
 ```
-The output image in both cases is simply a png file: `MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
-
+The output image in both cases is a png image showing how the $\pm$1$\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
 ### Fitting parameters
 NUISANCE is also able to vary specified parameters in order the find the values of those parameters that minimizes the chi-square test-statistic with respect to a desired set of samples. The hard work is all It will also calculate the postfit covariance matrix, and produce the best fit histograms. This was one of the primary motivations for producing NUISANCE in the first place!
