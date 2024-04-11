@@ -34,7 +34,7 @@ void make_basic_plot(std::string input_file_name, std::string measurement_name, 
   
   // Open the file
   TFile *in_file = new TFile(input_file_name.c_str());
-  
+
   // Get the generator prediction histogram
   TH1D *mc_hist = (TH1D*)in_file->Get((measurement_name+"_MC").c_str());
   
@@ -43,7 +43,7 @@ void make_basic_plot(std::string input_file_name, std::string measurement_name, 
 
   // This is a bit of a NUISANCE hack, the chisq between data and MC is stored as the MC histogram title
   std:string chisq = mc_hist->GetTitle();
-    
+  
   // Presentation is important
   mc_hist  ->SetLineWidth(3);
   mc_hist  ->SetLineColor(kRed);
@@ -99,11 +99,16 @@ void make_basic_plot(std::string input_file_name, std::string measurement_name, 
 // A feature is that subsequent command line arguments are passed to this function
 void nominal_plotter(){
 
-  std::string input_file_name  = "NUISANCE_example_with_GENIEv3.root";
-  std::string measurement_name = "MINERvA_CC1pi0_XSec_1DTpi_nu";
-  std::string output_plot_name = measurement_name+"_GENIEv3.png";
+  std::string input_file_name  = "nominal_GENIEv3_example.root";
+  std::string samples[] = {"MINERvA_CC0pinp_STV_XSec_1Dpmu_nu",
+    "MINERvA_CC1pip_XSec_1DTpi_nu_2017",
+    "MINERvA_CC1pi0_XSec_1DTpi_nu"};
   
-  make_basic_plot(input_file_name, measurement_name, output_plot_name);
+  for (const auto& sample : samples) {
+    std::string output_plot_name = "plots/nominal_"+sample+"_GENIEv3.png";
+    make_basic_plot(input_file_name, sample, output_plot_name);
+  }
+  
   return;
 }
     

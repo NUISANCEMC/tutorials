@@ -99,8 +99,12 @@ def make_basic_plot(input_file_name, measurement_name, output_plot_name):
 
 if __name__ == "__main__":
 
-    input_file_name  = "NUISANCE_example_with_GENIEv3.root"
-    measurement_name = "MINERvA_CC1pi0_XSec_1DTpi_nu"
-    output_plot_name = measurement_name+"_GENIEv3.png"
-    
-    make_basic_plot(input_file_name, measurement_name, output_plot_name)
+    input_file_name  = "nominal_GENIEv3_example.root"
+
+    samples = ["MINERvA_CC0pinp_STV_XSec_1Dpmu_nu", \
+               "MINERvA_CC1pip_XSec_1DTpi_nu_2017", \
+               "MINERvA_CC1pi0_XSec_1DTpi_nu"]
+
+    for sample in samples:
+        output_plot_name = "plots/nominal_"+sample+"_GENIEv3.png"
+        make_basic_plot(input_file_name, sample, output_plot_name)
