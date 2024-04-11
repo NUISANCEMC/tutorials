@@ -1,6 +1,5 @@
 <nuisance>
-  <!--sample name="MINERvA_CC1pip_XSec_1DTpi_nu_2017"  input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/-->
-  <sample name="MINERvA_CC1pi0_XSec_1DTpi_nu"       input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
+  <sample name="MINERvA_CC1pip_XSec_1DTpi_nu_2017"  input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
 
   <parameter name="MaCCRES" nominal="0" type="genie_parameter" low="-1" high="5" step="0.1" state="FREE" />
 
