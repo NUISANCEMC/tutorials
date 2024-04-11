@@ -23,7 +23,6 @@ Although the containers are built using docker, most container runtime environme
 
 You can also use any other container runtime environment you're familiar with that supports docker images. Good luck.
 
-
 ### Singularity
 Instructions for installing singularity on linux can be found here: https://sylabs.io/guides/3.10/admin-guide/installation.html
 
@@ -217,8 +216,8 @@ singularity exec nuisance_nuint2024.sif /bin/bash generation_NEUT_example.sh
 Note that the arguments are positional and NEUT doesn't take flags. The output of NEUT is automatically ready for NUISANCE, so no additional `Prepare` step is required.
 
 The NEUT generation script above produces a few files, but the two files we will use here are:
-*`NEUT570_MINERvA_LE_FHC_numu.root`, this is the `neutroot2` output, which needs correct libraries to read. No `PrepareX` step is necessary as NEUT already stores the histograms used for normalization in NUISANCE (which was originally developed for T2K...).
-*`NEUT570_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
+* `NEUT570_MINERvA_LE_FHC_numu.root`, this is the `neutroot2` output, which needs correct libraries to read. No `PrepareX` step is necessary as NEUT already stores the histograms used for normalization in NUISANCE (which was originally developed for T2K...).
+* `NEUT570_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
 
 Important parameters you will need to control in the NEUT card files:
 * `EVCT-NEVT`: sets the number of events to generate
