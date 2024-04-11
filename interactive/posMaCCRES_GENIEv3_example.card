@@ -1,0 +1,10 @@
+<nuisance>
+  <sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="GENIE:GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
+  <sample name="MINERvA_CC1pip_XSec_1DTpi_nu_2017"  input="GENIE:GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
+  <sample name="MINERvA_CC1pi0_XSec_1DTpi_nu"       input="GENIE:GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
+
+  <parameter name="MaCCRES" nominal="1" type="genie_parameter"/>
+
+  <config GENIETune="AR23_20i_00_000" />
+  <config UseSVDInverse="1" />
+</nuisance>
