@@ -197,7 +197,7 @@ Event reweighting is a way to overcome this issue in a computationally efficient
 NUISANCE also links directly to the event reweighting packages provided by the generators, and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
 
 ### Using the NUISANCE flat trees
-***Clarence, please drop your old example into some scripts and then describe them here***
+***Clarence, to upload updated example here to support slides***
 
 ### Making simple data-MC comparisons
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
@@ -223,11 +223,15 @@ or:
 
 To see all the measurements available, you can run the `nuissamples` executable, and it will tell you all the measurements it knows about. The source code for NUISANCE can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html for future reference.
 
-Other tags can be added to the card file to change the NUISANCE behaviour. One has been added in this case, the rather mysterious:
+Other tags can be added to the card file to change the NUISANCE behaviour. Two have been added in this case:
 ```
 <config UseSVDInverse="1" />
 ```
 If run without this line, *for these measurement* NUISANCE will refuse to run because the covariance matrix provided with the data is not invertible. This line forces NUISANCE to *approximate* the inversion using Singular Value Decomposition. This might seem drastic, and maybe is, but is extremely common. Most matrices provided by experiments are not invertible!
+```
+<config drawopts="MC|DATA|COV|INVCOV" />
+```
+This controls the outputs that are saved by NUISANCE, but this is more than enough for our purposes here.
 
 ### Analyzing the NUISANCE output
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
@@ -241,6 +245,18 @@ TBrowser b
 **Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for singularity, but possibly not for docker where X11 forwarding is... less seamless**
 
 Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
+
+Inside the file you'll find a number of ROOT objects:
+*likelihood_hist: the chi-square calculated between the data and MC, summarized for all samples
+*ndof_hist: the number of degrees of freedom for each data sample, summarized
+*likedivndof_hist: the ratio of the two above
+*<sample_name>_data: the real data provided by an experiment
+*<sample_name>_MC: the Monte Carlo prediction suitable to compare with the data
+*<sample_name>_COV: the covariance between data points (again provided by the experiment)
+*<sample_name>_INVCOV: the inverse of the covariance (note that with SVD included, this is not exact!)
+*<sample_name>_Chi2NMinusOne: the chi-square calculated between data and MC if bin x is omitted from the calculation
+*<sample_name>_RESIDUAL: definitely something...
+(Where `<sample_name>` can be any of the samples requested in the card file)
 
 There are two example scripts for producing a simple plot comparing data and simulation for one for the datasets analyzed using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
 ```
