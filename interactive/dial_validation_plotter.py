@@ -123,8 +123,8 @@ def make_dial_validation_plot(nominal_file_name, negvar_file_name, posvar_file_n
 if __name__ == "__main__":
 
     nominal_file_name  = "nominal_GENIEv3_example.root"
-    negvar_file_name   = "negMaCCRES_GENIEv3_example.root"
-    posvar_file_name   = "posMaCCRES_GENIEv3_example.root"
+    negvar_file_name   = "dialvar_negMaCCRES_GENIEv3_example.root"
+    posvar_file_name   = "dialvar_posMaCCRES_GENIEv3_example.root"
     
     samples = ["MINERvA_CC0pinp_STV_XSec_1Dpmu_nu", \
                "MINERvA_CC1pip_XSec_1DTpi_nu_2017", \

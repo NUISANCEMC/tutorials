@@ -314,9 +314,11 @@ Inside the file you'll find a number of ROOT objects:
 * `<sample_name>_COV`: the covariance between data points (again provided by the experiment)
 * `<sample_name>_INVCOV`: the inverse of the covariance (note that with SVD included, this is not exact!)
 * `<sample_name>_Chi2NMinusOne`: the chi-square calculated between data and MC if bin x is omitted from the calculation
+* **2D only** `<sample_name>_data_1D`: the real data provided by an experiment linearized to form a 1D histogram
+* **2D only** `<sample_name>_MC_1D`: the Monte Carlo prediction linearized to form a 1D histogram
 (Where `<sample_name>` can be any of the samples requested in the card file)
 
-There are two example scripts for producing a simple plot comparing data and simulation for one for the datasets analyzed using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
+There are two example scripts for producing a simple plot comparing data and simulation for the 1D datasets produced using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
 ```
 singularity exec  nuisance_nuint2024.sif python3 nominal_plotter.py
 ```
@@ -325,6 +327,8 @@ Or:
 singularity exec  nuisance_nuint2024.sif root -q -l -b nominal_plotter.C
 ```
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
+
+It is also possible to make a simlar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
 
 ### Varying parameters
 NUISANCE can link to various reweighting packages in order to calculate reweighting factors event by event for a given set of parameter variations. These reweighting packages could be from the event generators themselves, or additional reweighting packages such as those produced by many experiments. It is also possible to implement simple reweighting parameters in NUISANCE, although historically this has mostly been done for rapid development of a dial destined for another package. Again, NUISANCE is not (or at least rarely) doing the heavy lifting, it is a high-level tool that builds on top of the existing event generators!
@@ -335,7 +339,7 @@ To include a parameter variation, a line can be added to the NUISANCE card file 
 ```
   <parameter name="MaCCRES" nominal="-0.5" type="genie_parameter"/>
 ```
-where this changes the value of a "genie_parameter" (meaning [GENIEReWeight]{https://github.com/GENIE-MC/Reweight}) called "MaCCRES" (the axial mass value for the CC-resonant axial form factor), to -0.5, where the meaning of -0.5 is interpreted by the reweighting package.
+where this changes the value of a "genie_parameter" (meaning [GENIEReWeight](https://github.com/GENIE-MC/Reweight)) called "MaCCRES" (the axial mass value for the CC-resonant axial form factor), to -0.5, where the meaning of -0.5 is interpreted by the reweighting package.
 
 In the case of GENIE, and most other reweighting packaged, the reweighted dial value can be calculated with $V = N \times (1 + R \times S)$ where $V$ is the new value, $N$ is the nominal value, $R$ is the reweighting factor (e.g. -0.5 in this example), and $S$ is the $\pm$1 $\sigma$ shift value. It can be challenging to look up $N$ and $S$, and generally requires generator specific knowledge.
 

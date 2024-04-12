@@ -135,8 +135,8 @@ void make_dial_validation_plot(std::string nominal_file_name,
 void dial_validation_plotter(){
 
   std::string nominal_file_name  = "nominal_GENIEv3_example.root";
-  std::string negvar_file_name   = "negMaCCRES_GENIEv3_example.root";
-  std::string posvar_file_name   = "posMaCCRES_GENIEv3_example.root";
+  std::string negvar_file_name   = "dialvar_negMaCCRES_GENIEv3_example.root";
+  std::string posvar_file_name   = "dialvar_posMaCCRES_GENIEv3_example.root";
 	
   std::string samples[] = {"MINERvA_CC0pinp_STV_XSec_1Dpmu_nu",
     "MINERvA_CC1pip_XSec_1DTpi_nu_2017",
