@@ -254,10 +254,18 @@ singularity exec nuisance_nuint2024.sif nuiscomp -c nominal_GENIEv3_example.card
 In this example, data and the GENIEv3 files generated above are compared for four MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
 
 The MINERvA measurements included are:
-* `MINERvA_CC0pinp_STV_XSec_1Dpmu_nu`: [PRL 121 (2018) 2, 022504]{https://inspirehep.net/literature/1673175} (supplementary material), source code in `${NUISANCE}/src/MINERvA/MINERvA_CC0pinp_STV_XSec_1D_nu.cxx`
-* `MINERvA_CC1pip_XSec_1DTpi_nu_2017`: new data provided here https://minerva.fnal.gov/pion-data-release-page/ for an update of the [PRD 92, 092008 (2015)](https://inspirehep.net/literature/1303106) analysis, source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pip_XSec_1D_2017Update.cxx`
-* `MINERvA_CC1pi0_XSec_1DTpi_nu`: [PRD 96 (2017) 7, 072003](https://inspirehep.net/literature/1615865) (Fig. 12), source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pi0_XSec_1D_nu.cxx:`
-* `MINERvA_CCinc_XSec_2DEavq3_nu`: [PRL 116 (2016) 071802](https://inspirehep.net/literature/1405301) (Fig. 2), source code in `${NUISANCE}/src/MINERvA/MINERvA_CCinc_XSec_2DEavq3_nu.cxx`
+* `MINERvA_CC0pinp_STV_XSec_1Dpmu_nu`
+  + [PRL 121 (2018) 2, 022504](https://inspirehep.net/literature/1673175) (supplementary material)
+  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CC0pinp_STV_XSec_1D_nu.cxx`
+* `MINERvA_CC1pip_XSec_1DTpi_nu_2017`
+  + New data provided here https://minerva.fnal.gov/pion-data-release-page/ for an update of the [PRD 92, 092008 (2015)](https://inspirehep.net/literature/1303106) analysis
+  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pip_XSec_1D_2017Update.cxx`
+* `MINERvA_CC1pi0_XSec_1DTpi_nu`
+  + [PRD 96 (2017) 7, 072003](https://inspirehep.net/literature/1615865) (Fig. 12)
+  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pi0_XSec_1D_nu.cxx:`
+* `MINERvA_CCinc_XSec_2DEavq3_nu`
+  + [PRL 116 (2016) 071802](https://inspirehep.net/literature/1405301) (Fig. 2)
+  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CCinc_XSec_2DEavq3_nu.cxx`
 
 You can update the card to use NEUT or NuWro by updating each line from, e.g.:
 ```
