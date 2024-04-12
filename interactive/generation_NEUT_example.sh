@@ -13,3 +13,6 @@ neutroot2 ${INCARD} ${OUTFILE} &> /dev/null
 ## Only one NUISANCE step is required for NEUT
 echo "Creating NUISANCE flat trees"
 nuisflat -f GenericVectors -i NEUT:${OUTFILE} -o ${OUTFILE/.root/_NUISFLAT.root}
+
+## Clean up the files NEUT creates when generating events
+rm *_o.root

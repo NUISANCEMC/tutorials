@@ -22,3 +22,6 @@ PrepareNuWroEvents ${OUTFILE} -F ${FLUX_FILE},${FLUX_HIST},${NU_PDG}
 
 echo "Creating NUISANCE flat trees"
 nuisflat -f GenericVectors -i NuWro:${OUTFILE} -o ${OUTFILE/.root/_NUISFLAT.root}
+
+## Clean up the files NUWRO creates when generating events
+rm random_seed q0.txt q2.txt qv.txt totals.txt T.txt ${OUTFILE}.par ${OUTFILE}.txt
