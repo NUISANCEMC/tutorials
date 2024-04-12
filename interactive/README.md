@@ -143,7 +143,7 @@ Finally, there are copies of the files generated in this tutorial available here
 
 If you need, you can download them all from there, or with the command:
 ```
-wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/
+wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/ MC_outputs
 ```
 
 ### GENIE
@@ -190,7 +190,7 @@ An example script for producing 100k muon neutrino-hydrocarbon interactions for 
 singularity exec nuisance_nuint2024.sif /bin/bash generation_NUWRO_example.sh
 ```
 Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
-*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to ***fully*** read, although native ROOT can probably do okay because the structure is relatively simple
+*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
 *`NUWRO_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
 
 Note that most of the parameters that govern NuWro's execution are specified in 
@@ -251,7 +251,13 @@ A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_
 ```
 singularity exec nuisance_nuint2024.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
 ```
-In this example, data and the GENIEv3 files generated above are compared for three MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
+In this example, data and the GENIEv3 files generated above are compared for four MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
+
+The MINERvA measurements included are:
+* `MINERvA_CC0pinp_STV_XSec_1Dpmu_nu`: [PRL 121 (2018) 2, 022504]{https://inspirehep.net/literature/1673175} (supplementary material), source code in `${NUISANCE}/src/MINERvA/MINERvA_CC0pinp_STV_XSec_1D_nu.cxx`
+* `MINERvA_CC1pip_XSec_1DTpi_nu_2017`: new data provided here https://minerva.fnal.gov/pion-data-release-page/ for an update of the [PRD 92, 092008 (2015)](https://inspirehep.net/literature/1303106) analysis, source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pip_XSec_1D_2017Update.cxx`
+* `MINERvA_CC1pi0_XSec_1DTpi_nu`: [PRD 96 (2017) 7, 072003](https://inspirehep.net/literature/1615865) (Fig. 12), source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pi0_XSec_1D_nu.cxx:`
+* `MINERvA_CCinc_XSec_2DEavq3_nu`: [PRL 116 (2016) 071802](https://inspirehep.net/literature/1405301) (Fig. 2), source code in `${NUISANCE}/src/MINERvA/MINERvA_CCinc_XSec_2DEavq3_nu.cxx`
 
 You can update the card to use NEUT or NuWro by updating each line from, e.g.:
 ```
