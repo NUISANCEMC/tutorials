@@ -381,7 +381,7 @@ To include parameters in the fit, they must be added to the NUISANCE card file w
 ```
 This adds a few more fields to the parameter line(s) of the card file with respect to previous examples:
 *low: the minimum value that the parameter is allowed to take in the fit
-*high: the maxmimum value that the parameter is allowed to take in the fit
+*high: the maximum value that the parameter is allowed to take in the fit
 *step: gives the fitter a hint about how large the expected variation should be, but it will re-optimize the step size itself very quickly
 *state: can be "FREE", meaning it varies in the fit, or "FIX" (default) meaning it is not
 

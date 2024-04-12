@@ -46,4 +46,6 @@ PrepareGENIE -i $OUTFILE -f ${FLUX_FILE},${FLUX_HIST} \
 echo "Creating NUISANCE flat trees"
 nuisflat -f GenericVectors -i GENIE:${OUTFILE/.root/_NUIS.root} -o ${OUTFILE/.root/_NUISFLAT.root}
 
+## Clean up leftover file GENIE creates
+rm input-flux.root ${OUTFILE/.root/.status}
 

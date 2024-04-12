@@ -117,7 +117,6 @@ def make_dial_validation_plot(nominal_file_name, negvar_file_name, posvar_file_n
 
     ## This actually makes the plot
     can .SaveAs(output_plot_name)
-    print(output_plot_name)
     
 
 if __name__ == "__main__":
