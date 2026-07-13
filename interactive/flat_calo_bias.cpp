@@ -11,6 +11,7 @@ void flat_calo_bias(std::string filename) {
   int pdg[nmax];
 
   float Enu_QE;
+  float q0;
   float Enu_true;
   float CosLep;
   float ELep;
@@ -19,15 +20,15 @@ void flat_calo_bias(std::string filename) {
 
   tree->SetBranchStatus("*", false);
   tree->SetBranchStatus("E", true);
-  tree->SetBranchAddress("E", &E);
+  tree->SetBranchAddress("E", E);
   tree->SetBranchStatus("px", true);
-  tree->SetBranchAddress("px", &px);
+  tree->SetBranchAddress("px", px);
   tree->SetBranchStatus("py", true);
-  tree->SetBranchAddress("py", &py);
+  tree->SetBranchAddress("py", py);
   tree->SetBranchStatus("pz", true);
-  tree->SetBranchAddress("pz", &pz);
+  tree->SetBranchAddress("pz", pz);
   tree->SetBranchStatus("pdg", true);
-  tree->SetBranchAddress("pdg", &pdg);
+  tree->SetBranchAddress("pdg", pdg);
   tree->SetBranchStatus("Mode", true);
   tree->SetBranchAddress("Mode", &Mode);
   tree->SetBranchStatus("nfsp", true);
@@ -36,6 +37,8 @@ void flat_calo_bias(std::string filename) {
   tree->SetBranchAddress("Enu_QE", &Enu_QE);
   tree->SetBranchStatus("Enu_true", true);
   tree->SetBranchAddress("Enu_true", &Enu_true);
+  tree->SetBranchStatus("q0", true);
+  tree->SetBranchAddress("q0", &q0);
 
   tree->SetBranchStatus("CosLep", true);
   tree->SetBranchAddress("CosLep", &CosLep);
@@ -77,7 +80,10 @@ void flat_calo_bias(std::string filename) {
       // For photons and pi0, add all the energy
       //if (pdg[j] == 211 || pdg[j] == 111 || pdg[j] == 22 || pdg[j] == 130 || pdg[j] == 310 || pdg[j] == 311 || pdg[j] == 321) Eavail += E[j];
       else if ((pdg[j] == 211 || pdg[j] == 111) && p > 0.2) Eavail += E[j];
+      // photons
       else if (pdg[j] == 22) Eavail += E[j];
+      // Electrons
+      //else if (abs(pdg[j]) == 11) Eavail += E[j];
       else if (pdg[j] == 13) {
         nMuons++;
         Eavail += E[j];
@@ -86,6 +92,9 @@ void flat_calo_bias(std::string filename) {
 
     if (nMuons != 1) continue;
     double bias = (Eavail-Enu_true)/Enu_true;
+    // Example of other biases
+    //double bias = (Eavail-q0)/q0;
+    //double bias = Eavail/q0;
     hist[Mode]->Fill(bias);
   }
 
@@ -102,7 +111,7 @@ void flat_calo_bias(std::string filename) {
     } else {
       hist[i]->Draw("same,hist");
     }
-    hist[i]->Scale(scale);
+    hist[i]->Scale(scale, "width");
     max = hist[i]->GetMaximum() > max ? hist[i]->GetMaximum() : max;
     hist[i]->SetLineColor(nhists+1);
     hist[i]->SetMarkerSize(0);
