@@ -122,6 +122,8 @@ Then open up a TBrowser with `TBrowser b` and explore the histograms contained t
 Note that the example scripts below can be easily modified to take different input fluxes or use different targets, but also note that NUISANCE is not generating these events, the event generators are!
 
 Fluxes you might want to play with (included in `MC_inputs` for this tutorial) are:
+* MicroBooNE BNB flux: `MicroBooNE_FHC_numu_TN1031.root`
+  + `numu_hist`: $\nu_{\mu}$ BNB flux
 * T2K ND280 (anti)neutrino-enhanced: `t2kflux_2016_plus250kA.root` (`t2kflux_2016_minus250kA.root`)
   + `enu_nd280_numu`: $\nu_{\mu}$ flux at the ND280
   + `enu_nd280_numub`: $\bar{\nu}_{\mu}$ flux at the ND280
@@ -139,7 +141,22 @@ Fluxes you might want to play with (included in `MC_inputs` for this tutorial) a
   + `nue_fhc`: $\nu_{e}$ flux at the near detector in neutrino-enhanced mode
   + `nuebar_fhc`: $\bar{\nu}_{e}$ flux at the near detector in neutrino-enhanced mode
   + Replace `fhc` for `rhc` for anti-neutrino-enhanced mode
-
+* DUNE far detector, including NuFit5.2 (NO, w/o SK): `DUNE_FHC(RHC)_NuFit5NO.root` for FHC (RHC)
+  + `numu_FDFHC_flux`: unoscillated $\nu_{\mu}$ flux
+  + `numu_FDFHC_flux_osc`: oscillated $\nu_{\mu} \rightarrow \nu_{\mu}$ flux
+  + `nue_FDFHC_flux_osc`: oscillated $\nu_{\mu} \rightarrow \nu_{e}$ flux (other contributions neglected)
+  + `numubar_FDFHC_flux`: unoscillated $\bar{\nu}_{\mu}$ flux
+  + `numubar_FDFHC_flux_osc`: oscillated $`\bar{\nu}_{\mu} \rightarrow \bar{\nu}_{\mu}`$ flux
+  + `nuebar_FDFHC_flux_osc`: oscillated $`\bar{\nu}_{\mu} \rightarrow \bar{\nu}_{e}`$ flux (other contributions neglected)
+  + Replace `FHC` for `RHC` for the anti-neutrino-enhanced mode fluxes
+* T2K/HK far detector, including NuFit5.2 (NO, w/o SK): `T2KSK_FHC(RHC)_NuFit5NO.root` for FHC (RHC)
+  + `sk_numu_unosc`: unoscillated $\nu_{\mu}$ flux
+  + `sk_numu_osc`: oscillated $\nu_{\mu} \rightarrow \nu_{\mu}$ flux
+  + `sk_nue_osc`: oscillated $\nu_{\mu} \rightarrow \nu_{e}$ flux (other contributions neglected)
+  + `sk_numubar_unosc`: unoscillated $\bar{\nu}_{\mu}$ flux
+  + `sk_numubar_osc`: oscillated $`\bar{\nu}_{\mu} \rightarrow \bar{\nu}_{\mu}`$ flux
+  + `sk_nuebar_osc`: oscillated $`\bar{\nu}_{\mu} \rightarrow \bar{\nu}_{e}`$ flux (other contributions neglected)
+  + Fluxes have the same names for the anti-neutrino-enhanced mode flux file
 Note that *some* cross-section results have custom flux tunings and don't use these "nominal" fluxes. 
 
 Finally, there are copies of the files generated in this tutorial available here: https://portal.nersc.gov/project/nuisance/tutorial/
