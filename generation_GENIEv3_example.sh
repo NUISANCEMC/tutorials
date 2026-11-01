@@ -9,7 +9,7 @@ THIS_SEED=0
 NU_PDG=14
 
 ## The flux histograms to use
-FLUX_FILE=/opt/nuisance/data/flux/minerva_le_flux.root
+FLUX_FILE=MC_inputs/minerva_le_flux.root
 FLUX_HIST=numu_fhc
 
 ## The target material
@@ -36,7 +36,7 @@ echo "Starting gevgen..."
 gevgen -n ${NEVENTS} -t ${TARG} -p ${NU_PDG} \
        --cross-sections ${XSEC_SPLINES} \
        --tune ${TUNE} --seed ${THIS_SEED} \
-       -f ${FLUX_FILE},${FLUX_HIST} -e ${E_MIN},${E_MAX} -o ${OUTFILE} &> /dev/null
+       -f ${FLUX_FILE},${FLUX_HIST} -e ${E_MIN},${E_MAX} -o ${OUTFILE} #&> /dev/null
 
 ## The next two steps use NUISANCE applications
 echo "Starting PrepareGENIE..."
