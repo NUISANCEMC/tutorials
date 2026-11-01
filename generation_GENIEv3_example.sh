@@ -36,7 +36,7 @@ echo "Starting gevgen..."
 gevgen -n ${NEVENTS} -t ${TARG} -p ${NU_PDG} \
        --cross-sections ${XSEC_SPLINES} \
        --tune ${TUNE} --seed ${THIS_SEED} \
-       -f ${FLUX_FILE},${FLUX_HIST} -e ${E_MIN},${E_MAX} -o ${OUTFILE} #&> /dev/null
+       -f ${FLUX_FILE},${FLUX_HIST} -e ${E_MIN},${E_MAX} -o ${OUTFILE} &> /dev/null
 
 ## The next two steps use NUISANCE applications
 echo "Starting PrepareGENIE..."
