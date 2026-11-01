@@ -107,7 +107,7 @@ Neutrino event generators provide executables for making neutrino events with si
 
 Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event enerator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
 
-A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/nuisance/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA "low energy" flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/nuisance/data/flux/minerva_le_flux.root` . I've also made a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
+A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/generators/NUISANCE/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA "low energy" flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/generators/NUISANCE/data/flux/minerva_le_flux.root`. There's also a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
 
 You can inspect this file with ROOT if you would like with:
 ```
@@ -224,7 +224,8 @@ Although the NuWro input file contains a lot of options, the important ones for 
 
 To explore the targets available, and the settings, you can look at the nuwro source code, for example:
 ```
-singularity exec  nuisance_nustec2026.sif cat /opt/nuwro/data/target/CH.txt
+singularity exec  nuisance_nustec2026.sif ls -l /opt/generators/nuwro/data/target
+singularity exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/CH.txt
 ```
 
 ### NEUT
