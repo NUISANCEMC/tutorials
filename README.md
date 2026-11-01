@@ -31,7 +31,7 @@ Instructions for installing singularity on linux can be found here: https://syla
 
 You can obtain the container needed for this tutorial with the command:
 ```
-singularity pull nuisance_nuint2024.sif docker://nuisancemc/tutorial:nuint2024
+singularity pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
 which will get the container from dockerhub, and convert it to a singularity (.sif) image locally. This step needs an internet connection, and will save a ~1 GB file locally on your system.
 
@@ -90,15 +90,15 @@ The above arguments the the above command do the following:
 * `-w /output` execute the command in `/output` within the container
 An important caveat is that you don't have access to anywhere on the host machine that isn't the current working directory (but you can add other mountpoints etc if desired).
 
-Another caveat is that docker does not set up X11 forwarding from the container to the host, so opening GUI's from the container will report issues. This is solveable, but is system dependent, so I won't offer a general solution here. Instead, please ensure that you have a version of ROOT installed locally, for which you can instructions here: https://root.cern/install/
+Another caveat is that docker does not set up X11 forwarding from the container to the host, so opening GUI's from the container will report issues. This is solveable, but is system dependent, so I won't offer a general solution here. You can install a version of ROOT locally, for which you can instructions here: https://root.cern/install/, or ask Dr. Claude how to sort out X11 forwarding on your system.
 
 The rest of the tutorial will use singularity for the examples. If you're using docker, you can replace any instance of:
 ```
-singularity exec nuisance_nuint2024.sif <...>
+singularity exec nuisance_nustec2026.sif <...>
 ```
 with
 ```
-sudo docker run --rm -v $(pwd):/output -w /output nuisancemc/tutorial:nuint2024
+sudo docker run --rm -v $(pwd):/output -w /output wilkinsonnu/nuisancemc:tutorial <...>
 ```
 When examples suggest opening files with ROOT and browsing with ROOT's GUI `TBrowser`, you will need to use your local copy of ROOT instead... or be very confident that you know how to sort out X11 forwarding between the container and your host machine.
 
@@ -111,7 +111,7 @@ A collection of experimental fluxes is available in the NUISANCE data directory,
 
 You can inspect this file with ROOT if you would like with:
 ```
-singularity exec nuisance_nuint2024.sif root -l MC_inputs/minerva_le_flux.root
+singularity exec nuisance_nustec2026.sif root -l MC_inputs/minerva_le_flux.root
 ```
 or if you're using a local version of root.
 ```
@@ -156,7 +156,7 @@ In this project, we will focus on neutrino interactions, for which the simplest 
 
 An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `generation_GENIEv3_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
 ```
-singularity exec nuisance_nuint2024.sif /bin/bash generation_GENIEv3_example.sh
+singularity exec nuisance_nustec2026.sif /bin/bash generation_GENIEv3_example.sh
 ```
 There will be a few output files produced:
 * `GENIEv3_AR23_MINERvA_LE_FHC_numu.root`, the gevgen output in GENIE's GHEP format, requires the correct libraries to read
@@ -168,11 +168,11 @@ If you look at the script, you will see that the `NU_PDG` and `TARG` variables a
 
 Also, there is a `--cross-section` argument to `gevgen`, which takes a mysterious file in `MC_inputs`. This file includes pre-calculated "splines" as a function of true neutrino energy, broken down into all of the processes that have been included in the GENIE model, for a variety of targets and neutrino flavors. You can use a GENIE utility `gspl2root` to extract these splines into ROOT TGraphs, for easy plotting or inspection. An example command is:
 ```
-singularity exec nuisance_nuint2024.sif gspl2root -f MC_inputs/AR23_20i_00_000_splines.xml.gz -p 14,-14 -t 1000060120 -e 10 --tune AR23_20i_00_000 -o AR23_20i_00_000_splines.root
+singularity exec nuisance_nustec2026.sif gspl2root -f MC_inputs/AR23_20i_00_000_splines.xml.gz -p 14,-14 -t 1000060120 -e 10 --tune AR23_20i_00_000 -o AR23_20i_00_000_splines.root
 ```
 which can be explored with:
 ```
-singularity exec nuisance_nuint2024.sif root -l AR23_20i_00_000_splines.root
+singularity exec nuisance_nustec2026.sif root -l AR23_20i_00_000_splines.root
 ```
 For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf).
 
@@ -190,7 +190,7 @@ For full information on the physics content of the tunes, refer to https://hep.p
 
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWRO_LFGRPA.params`, and can be run with the following command (which should take ~1 minute):
 ```
-singularity exec nuisance_nuint2024.sif /bin/bash generation_NUWRO_example.sh
+singularity exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
 ```
 Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
 *`NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
@@ -207,7 +207,7 @@ Although the NuWro input file contains a lot of options, the important ones for 
 
 To explore the targets available, and the settings, you can look at the nuwro source code, for example:
 ```
-singularity exec  nuisance_nuint2024.sif cat /opt/nuwro/data/target/CH.txt
+singularity exec  nuisance_nustec2026.sif cat /opt/nuwro/data/target/CH.txt
 ```
 
 ### NEUT
@@ -215,7 +215,7 @@ singularity exec  nuisance_nuint2024.sif cat /opt/nuwro/data/target/CH.txt
 
 NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate events 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
 ```
-singularity exec nuisance_nuint2024.sif /bin/bash generation_NEUT_example.sh
+singularity exec nuisance_nustec2026.sif /bin/bash generation_NEUT_example.sh
 ```
 Note that the arguments are positional and NEUT doesn't take flags. The output of NEUT is automatically ready for NUISANCE, so no additional `Prepare` step is required.
 
@@ -297,7 +297,7 @@ There are a number of NUISANCE utilities for different purposes, but most of wha
 
 A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_example.sh`, which can be run with:
 ```
-singularity exec nuisance_nuint2024.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
+singularity exec nuisance_nustec2026.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
 ```
 In this example, data and the GENIEv3 files generated above are compared for four MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
 
@@ -343,7 +343,7 @@ This controls the outputs that are saved by NUISANCE, but this is more than enou
 ### Analyzing the NUISANCE output
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
-singularity exec nuisance_nuint2024.sif root -l <file_name.root>
+singularity exec nuisance_nustec2026.sif root -l <file_name.root>
 ```
 And then explore the file with the ROOT TBrowser GUI with:
 ```
@@ -368,11 +368,11 @@ Inside the file you'll find a number of ROOT objects:
 
 There are two example scripts for producing a simple plot comparing data and simulation for the 1D datasets produced using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
 ```
-singularity exec  nuisance_nuint2024.sif python3 nominal_plotter.py
+singularity exec  nuisance_nustec2026.sif python3 nominal_plotter.py
 ```
 Or:
 ```
-singularity exec  nuisance_nuint2024.sif root -q -l -b nominal_plotter.C
+singularity exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
 ```
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
@@ -404,17 +404,17 @@ Finally, one can also change the meaning of the dial value change to be as a fra
 
 To see the utility of this reweighting in action, there are two example card files, with a positive and negative 1$\sigma$ shift to `MaCCRES` which can generate output with the commands:
 ```
-singularity exec nuisance_nuint2024.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
-singularity exec nuisance_nuint2024.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
+singularity exec nuisance_nustec2026.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
+singularity exec nuisance_nustec2026.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
 ```
 
 And then the scripts `dial_validation_plotter.C` or `dial_validation_plotter.py` both make validation plots showing the impact of those shifts on the predictions for the MINERvA samples of interest. Run these with either:
 ```
-singularity exec  nuisance_nuint2024.sif python3 dial_validation_plotter.py
+singularity exec  nuisance_nustec2026.sif python3 dial_validation_plotter.py
 ```
 Or:
 ```
-singularity exec  nuisance_nuint2024.sif root -q -l -b dial_validation_plotter.C
+singularity exec  nuisance_nustec2026.sif root -q -l -b dial_validation_plotter.C
 ```
 The output image in both cases is a png image showing how the $\pm$1$\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
@@ -437,7 +437,7 @@ Again, you can add any number of parameters and samples to the fit, but the more
 
 To run a fit with a desired card file, using the `nuismin` program, instead of the usual `nuiscomp` used so far. An example card file for running a simple fit with a single free GENIE parameter `MaCCRES`, and a single MINERvA data sample, is given in `fit_GENIEv3_example.card`, which can be processed with:
 ```
-singularity exec nuisance_nuint2024.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
+singularity exec nuisance_nustec2026.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
 ```
 
 The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions/modifications:
