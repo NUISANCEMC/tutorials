@@ -210,8 +210,8 @@ An example script for producing 100k muon neutrino-hydrocarbon interactions for 
 singularity exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
 ```
 Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
-*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
-*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
+* `NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
+* `NUWRO_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
 
 Note that most of the parameters that govern NuWro's execution are specified in 
 Although the NuWro input file contains a lot of options, the important ones for your purposes are:
