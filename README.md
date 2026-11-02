@@ -252,11 +252,6 @@ Important parameters you will need to control in the NEUT card files:
 * `NEUT-NUMATOM`: total number of nucleons (it's redundant but has to be set)
 `neutroot2` is not able to simulate complex molecular targets, just single elements with additional hydrogen components, but that's sufficient for most purposes. Alternative event generation applications are provided to generate events with more complex targets and geometries.
 
-### Event reweighting
-All of the generators discussed above have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
-
-Event reweighting is a way to overcome this issue in a computationally efficient way. It is very widely used, but can have limitations. The procedure is relatively simple. If you have a set of events produced with some nominal parameter set, and want to approximate a set of events with some alternative parameter set, for each event, you calculate the probability for that event to have been produced with the nominal and alternative parameter set. Then, you take the ratio of the alternative probability divided by the nominal probability and obtain a "weight", reflecting how much more or less probable that event would be with the alternative, rather than nominal, parameter set. Then, the distribution of weighted events will look the same as the distribution of events had they been produced with the alternative parameter set.
-
 ## NUISANCE
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, and compares it to measured data and other generators. The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. Then the published uncertainty (and covariance) are used to calculate the degree of compatibility between the data and Monte Carlo simulation.
 
@@ -310,7 +305,7 @@ which performs the event selection (here one mu- and one pi+), and saves the ind
 
 The particle codes follow the PDG standard, documented in https://pdg.lbl.gov/2020/reviews/rpp2020-rev-monte-carlo-numbering.pdf for example.
 
-### Making simple data-MC comparisons
+### Making simple data--MC comparisons
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
 A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_example.sh`, which can be run with:
@@ -339,11 +334,11 @@ You can update the card to use NEUT or NuWro by updating each line from, e.g.:
 ```
 to either:
 ```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:MC_outputs/NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root"/>
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:MC_outputs/NUWROv25.11.1_MINERvA_LE_FHC_numu.root"/>
 ```
 or:
 ```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:MC_outputs/NEUT570_MINERvA_LE_FHC_numu.root"/>
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:MC_outputs/NEUT592_MINERvA_LE_FHC_numu.root"/>
 ```
 
 To see all the measurements available, you can run the `nuissamples` executable, and it will tell you all the measurements it knows about. The source code for NUISANCE can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html for future reference.
@@ -395,6 +390,15 @@ singularity exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
 It is also possible to make a simlar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
+
+### Event reweighting
+All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
+
+Event reweighting is a way to overcome this issue in a computationally efficient way. It is widely used, but has strong limitations. The procedure is relatively simple. If you have a set of events produced with some nominal parameter set, and want to approximate a set of events with some alternative parameter set, for each event, you calculate the probability for that event to have been produced with the nominal and alternative parameter set. Then, you take the ratio of the alternative probability divided by the nominal probability and obtain a "weight", reflecting how much more or less probable that event would be with the alternative, rather than nominal, parameter set. Then, the distribution of weighted events will look the same as the distribution of events had they been produced with the alternative parameter set.
+
+Event reweighting packages are available inside NEUT and GENIE, and are actively developed additional. Additionally, experimental collaborations often implement additional uncertainties through custom reweighting packages which may or may not be open source. NUISANCE itself also has a mechanism for implementing new  (but simple) uncertainties.
+
+Although commonly used, a fundamental limitation of reweighting is that regions of phase space which are not occupied in the initial model cannot be reweighted into existence.
 
 ### Varying parameters
 NUISANCE can link to various reweighting packages in order to calculate reweighting factors event by event for a given set of parameter variations. These reweighting packages could be from the event generators themselves, or additional reweighting packages such as those produced by many experiments. It is also possible to implement simple reweighting parameters in NUISANCE, although historically this has mostly been done for rapid development of a dial destined for another package. Again, NUISANCE is not (or at least rarely) doing the heavy lifting, it is a high-level tool that builds on top of the existing event generators!
