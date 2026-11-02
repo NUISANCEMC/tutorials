@@ -107,7 +107,7 @@ Neutrino event generators provide executables for making neutrino events with si
 
 Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event enerator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
 
-A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/nuisance/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA "low energy" flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/nuisance/data/flux/minerva_le_flux.root` . I've also made a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
+A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/generators/NUISANCE/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA "low energy" flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/generators/NUISANCE/data/flux/minerva_le_flux.root`. There's also a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
 
 You can inspect this file with ROOT if you would like with:
 ```
@@ -191,7 +191,7 @@ which can be explored with:
 ```
 singularity exec nuisance_nustec2026.sif root -l AR23_20i_00_000_splines.root
 ```
-For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf).
+For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://arxiv.org/abs/1510.05494) and the [GENIE website](https://genie-mc.github.io/index.html).
 
 A few different spline files have been included for different available GENIE "tunes", which you can try to use to compare and contrast the differences:
 * `AR23_20i_00_000`: `AR23_20i_00_000_splines.xml.gz`
@@ -200,18 +200,18 @@ A few different spline files have been included for different available GENIE "t
 * `G21_11a_00_000`: `G21_11a_00_000_splines.xml.gz`
 In these files, splines are available for the targets hydrogen, carbon, oxygen and argon, for all neutrino flavors.
 
-For full information on the physics content of the tunes, refer to https://hep.ph.liv.ac.uk/~costasa/genie/tunes.html, where you can also find details on other available tunes!
+For full information on the physics content of the tunes, refer to https://genie-mc.github.io/tunes.html, where you can also find details on other available tunes!
 
 ### NUWRO
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
-An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWRO_LFGRPA.params`, and can be run with the following command (which should take ~1 minute):
+An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
 ```
 singularity exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
 ```
 Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
-*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
-*`NUWRO_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
+* `NUWROv25.11.1_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
+* `NUWROv25.11.1_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
 
 Note that most of the parameters that govern NuWro's execution are specified in 
 Although the NuWro input file contains a lot of options, the important ones for your purposes are:
@@ -224,7 +224,8 @@ Although the NuWro input file contains a lot of options, the important ones for 
 
 To explore the targets available, and the settings, you can look at the nuwro source code, for example:
 ```
-singularity exec  nuisance_nustec2026.sif cat /opt/nuwro/data/target/CH.txt
+singularity exec  nuisance_nustec2026.sif ls -l /opt/generators/nuwro/data/target
+singularity exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/CH.txt
 ```
 
 ### NEUT
@@ -237,8 +238,8 @@ singularity exec nuisance_nustec2026.sif /bin/bash generation_NEUT_example.sh
 Note that the arguments are positional and NEUT doesn't take flags. The output of NEUT is automatically ready for NUISANCE, so no additional `Prepare` step is required.
 
 The NEUT generation script above produces a few files, but the two files we will use here are:
-* `NEUT570_MINERvA_LE_FHC_numu.root`, this is the `neutroot2` output, which needs correct libraries to read. No `PrepareX` step is necessary as NEUT already stores the histograms used for normalization in NUISANCE (which was originally developed for T2K...).
-* `NEUT570_LFGRPA_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
+* `NEUT592_MINERvA_LE_FHC_numu.root`, this is the `neutroot2` output, which needs correct libraries to read. No `PrepareX` step is necessary as NEUT already stores the histograms used for normalization in NUISANCE (which was originally developed for T2K...).
+* `NEUT592_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
 
 Important parameters you will need to control in the NEUT card files:
 * `EVCT-NEVT`: sets the number of events to generate
@@ -251,20 +252,15 @@ Important parameters you will need to control in the NEUT card files:
 * `NEUT-NUMATOM`: total number of nucleons (it's redundant but has to be set)
 `neutroot2` is not able to simulate complex molecular targets, just single elements with additional hydrogen components, but that's sufficient for most purposes. Alternative event generation applications are provided to generate events with more complex targets and geometries.
 
-### Event reweighting
-All of the generators discussed above have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
-
-Event reweighting is a way to overcome this issue in a computationally efficient way. It is very widely used, but can have limitations. The procedure is relatively simple. If you have a set of events produced with some nominal parameter set, and want to approximate a set of events with some alternative parameter set, for each event, you calculate the probability for that event to have been produced with the nominal and alternative parameter set. Then, you take the ratio of the alternative probability divided by the nominal probability and obtain a "weight", reflecting how much more or less probable that event would be with the alternative, rather than nominal, parameter set. Then, the distribution of weighted events will look the same as the distribution of events had they been produced with the alternative parameter set.
-
 ## NUISANCE
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, and compares it to measured data and other generators. The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. Then the published uncertainty (and covariance) are used to calculate the degree of compatibility between the data and Monte Carlo simulation.
 
-NUISANCE also links directly to the event reweighting packages provided by the generators, and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
+NUISANCE also links directly to the event reweighting packages provided by the generators (more on that later), and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
 
 ### Using the NUISANCE flat trees
 The NUISANCE flat trees provide a simple common flat tree format which is the same for all generators. This makes it very easy to compare features of different generators, and explore the physics that is implemented in them.
 
-The flat trees have precalculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-mmomentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus, and the full particle stack; before the interaction, after the nucleon interaction, and after the final state interactions.
+The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus, and the full particle stack; before the interaction, after the nucleon interaction, and after the final state interactions.
 
 Scripts proceed via usual ROOT macros and only require ROOT to be installed; no need for generator stacks or similar. If someone has been kind enough to pre-generate flat-trees for you (see for example `download_files_forNuSTEC2024.sh`), you can get quite knowledgable about generator physics without ever running them!
 
@@ -309,7 +305,7 @@ which performs the event selection (here one mu- and one pi+), and saves the ind
 
 The particle codes follow the PDG standard, documented in https://pdg.lbl.gov/2020/reviews/rpp2020-rev-monte-carlo-numbering.pdf for example.
 
-### Making simple data-MC comparisons
+### Making simple data--MC comparisons
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
 A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_example.sh`, which can be run with:
@@ -338,11 +334,11 @@ You can update the card to use NEUT or NuWro by updating each line from, e.g.:
 ```
 to either:
 ```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:MC_outputs/NUWRO_LFGRPA_MINERvA_LE_FHC_numu.root"/>
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:MC_outputs/NUWROv25.11.1_MINERvA_LE_FHC_numu.root"/>
 ```
 or:
 ```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:MC_outputs/NEUT570_MINERvA_LE_FHC_numu.root"/>
+<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:MC_outputs/NEUT592_MINERvA_LE_FHC_numu.root"/>
 ```
 
 To see all the measurements available, you can run the `nuissamples` executable, and it will tell you all the measurements it knows about. The source code for NUISANCE can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html for future reference.
@@ -394,6 +390,15 @@ singularity exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
 It is also possible to make a simlar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
+
+### Event reweighting
+All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
+
+Event reweighting is a way to overcome this issue in a computationally efficient way. It is widely used, but has strong limitations. The procedure is relatively simple. If you have a set of events produced with some nominal parameter set, and want to approximate a set of events with some alternative parameter set, for each event, you calculate the probability for that event to have been produced with the nominal and alternative parameter set. Then, you take the ratio of the alternative probability divided by the nominal probability and obtain a "weight", reflecting how much more or less probable that event would be with the alternative, rather than nominal, parameter set. Then, the distribution of weighted events will look the same as the distribution of events had they been produced with the alternative parameter set.
+
+Event reweighting packages are available inside NEUT and GENIE, and are actively developed additional. Additionally, experimental collaborations often implement additional uncertainties through custom reweighting packages which may or may not be open source. NUISANCE itself also has a mechanism for implementing new  (but simple) uncertainties.
+
+Although commonly used, a fundamental limitation of reweighting is that regions of phase space which are not occupied in the initial model cannot be reweighted into existence.
 
 ### Varying parameters
 NUISANCE can link to various reweighting packages in order to calculate reweighting factors event by event for a given set of parameter variations. These reweighting packages could be from the event generators themselves, or additional reweighting packages such as those produced by many experiments. It is also possible to implement simple reweighting parameters in NUISANCE, although historically this has mostly been done for rapid development of a dial destined for another package. Again, NUISANCE is not (or at least rarely) doing the heavy lifting, it is a high-level tool that builds on top of the existing event generators!
