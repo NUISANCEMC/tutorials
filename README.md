@@ -191,7 +191,7 @@ which can be explored with:
 ```
 singularity exec nuisance_nustec2026.sif root -l AR23_20i_00_000_splines.root
 ```
-For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/007/man.pdf).
+For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://arxiv.org/abs/1510.05494) and the [GENIE website](https://genie-mc.github.io/index.html).
 
 A few different spline files have been included for different available GENIE "tunes", which you can try to use to compare and contrast the differences:
 * `AR23_20i_00_000`: `AR23_20i_00_000_splines.xml.gz`
@@ -200,7 +200,7 @@ A few different spline files have been included for different available GENIE "t
 * `G21_11a_00_000`: `G21_11a_00_000_splines.xml.gz`
 In these files, splines are available for the targets hydrogen, carbon, oxygen and argon, for all neutrino flavors.
 
-For full information on the physics content of the tunes, refer to https://hep.ph.liv.ac.uk/~costasa/genie/tunes.html, where you can also find details on other available tunes!
+For full information on the physics content of the tunes, refer to https://genie-mc.github.io/tunes.html, where you can also find details on other available tunes!
 
 ### NUWRO
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
@@ -255,12 +255,12 @@ Important parameters you will need to control in the NEUT card files:
 ## NUISANCE
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, and compares it to measured data and other generators. The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. Then the published uncertainty (and covariance) are used to calculate the degree of compatibility between the data and Monte Carlo simulation.
 
-NUISANCE also links directly to the event reweighting packages provided by the generators, and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
+NUISANCE also links directly to the event reweighting packages provided by the generators (more on that later), and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
 
 ### Using the NUISANCE flat trees
 The NUISANCE flat trees provide a simple common flat tree format which is the same for all generators. This makes it very easy to compare features of different generators, and explore the physics that is implemented in them.
 
-The flat trees have precalculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-mmomentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus, and the full particle stack; before the interaction, after the nucleon interaction, and after the final state interactions.
+The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus, and the full particle stack; before the interaction, after the nucleon interaction, and after the final state interactions.
 
 Scripts proceed via usual ROOT macros and only require ROOT to be installed; no need for generator stacks or similar. If someone has been kind enough to pre-generate flat-trees for you (see for example `download_files_forNuSTEC2024.sh`), you can get quite knowledgable about generator physics without ever running them!
 
