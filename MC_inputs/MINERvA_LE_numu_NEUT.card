@@ -5,7 +5,7 @@ EVCT-POS  0. 0. 0.
 EVCT-MDIR 1
 EVCT-DIR 0. 0. 1.
 EVCT-MPV 3
-EVCT-FILENM  '/opt/nuisance/data/flux/minerva_le_flux.root'
+EVCT-FILENM  'MC_inputs/minerva_le_flux.root'
 EVCT-HISTNM  'numu_fhc'
 
 EVCT-INMEV 0
