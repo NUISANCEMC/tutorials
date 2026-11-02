@@ -264,7 +264,7 @@ The flat trees have pre-calculated variables and fundamental interaction variabl
 
 Scripts proceed via usual ROOT macros and only require ROOT to be installed; no need for generator stacks or similar. If someone has been kind enough to pre-generate flat-trees for you (see for example `download_files_forNuSTEC2024.sh`), you can get quite knowledgable about generator physics without ever running them!
 
-If the concept of `TTree`s are completely new to you, you'll likely find this ROOT tutorial useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
+If the concept of a `TTree` is completely new to you, you'll likely find this ROOT tutorial useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
 
 The example scripts all use the style of command `root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'`.
 
@@ -389,7 +389,7 @@ singularity exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
 ```
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
-It is also possible to make a simlar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
+It is also possible to make a similar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
 
 ### Event reweighting
 All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
