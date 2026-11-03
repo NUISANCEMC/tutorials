@@ -6,9 +6,9 @@ git clone https://github.com/NUISANCEMC/tutorials.git nuisance_tutorials
 ```
 If you don't have git, you *could* also download a zip file from the green code tab on the front page. But... just install git.
 
-All of the work will be done within `nuisance_tutorials/interactive`, so:
+All of the work will be done within `nuisance_tutorials`, so:
 ```
-cd nuisance_tutorials/interactive
+cd nuisance_tutorials
 ```
 
 ## Pre-made example files:
@@ -258,53 +258,10 @@ Important parameters you will need to control in the NEUT card files:
 NUISANCE also links directly to the event reweighting packages provided by the generators (more on that later), and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
 
 ### Using the NUISANCE flat trees
-The NUISANCE flat trees provide a simple common flat tree format which is the same for all generators. This makes it very easy to compare features of different generators, and explore the physics that is implemented in them.
+[See the separate readme in the scripts directory](scripts/README.md)
 
-The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus, and the full particle stack; before the interaction, after the nucleon interaction, and after the final state interactions.
-
-Scripts proceed via usual ROOT macros and only require ROOT to be installed; no need for generator stacks or similar. If someone has been kind enough to pre-generate flat-trees for you (see for example `download_files_forNuSTEC2024.sh`), you can get quite knowledgable about generator physics without ever running them!
-
-If the concept of a `TTree` is completely new to you, you'll likely find this ROOT tutorial useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
-
-The example scripts all use the style of command `root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'`.
-
-#### Simple analysis using `TTree::Draw`
-An example script using simple `TTree::Draw` commands has been provided in `flat_w_bymode.cpp`. The central part of the script is
-```
-  int nModes = 30;
-  double scale = tree->GetMaximum("fScaleFactor");
-
-  TH1D **w = new TH1D*[nModes];
-  for (int i = 0; i < nModes; ++i) {
-    tree->Draw(Form("W>>h%i(50,0.5,3)", i), Form("Mode==%i", i));
-    w[i] = (TH1D*)gDirectory->Get(Form("h%i", i));
-    w[i]->SetTitle(Form("W (Mode==%i);W (GeV/c^{2});d#sigma/dW (cm^{2}/(GeV/c^{2})/nucleon)", i));
-  }
-  tree->Draw("W>>h00(50, 0.5, 3)", "Mode<30");
-```
-which draws all interaction modes below 30 (which means charged current), called `hN` where `N` is the Nth interaction mode, and the total, called `h00`.
-
-#### Analysis using the particle stack
-Two examples drawing from the full particle stack are also provided, see `flat_calo_bias.cpp` and `flat_pion_mom.cpp`. Here, the central part is the looping over the final state particle stacks:
-```
-    for (int j = 0; j < nfsp; ++j) {
-      if (pdg[j] == 211) {
-        nPions++;
-        PiIndex = j;
-      }
-      if (pdg[j] == 13) nMuons++;
-    }
-
-    if (nPions != 1) continue;
-    if (nMuons != 1) continue;
-
-    double ptot = sqrt(px[PiIndex]*px[PiIndex]+py[PiIndex]*py[PiIndex]+pz[PiIndex]*pz[PiIndex]);
-    ppi[Mode]->Fill(ptot);
-```
-which performs the event selection (here one mu- and one pi+), and saves the index of the pion so the momentum can be retrieved and plotted in the `ppi` histograms.
-
-The particle codes follow the PDG standard, documented in https://pdg.lbl.gov/2020/reviews/rpp2020-rev-monte-carlo-numbering.pdf for example.
-
+<details>
+<summary>Making simple data--MC comparisons</summary>
 ### Making simple data--MC comparisons
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
@@ -352,6 +309,7 @@ If run without this line, *for these measurement* NUISANCE will refuse to run be
 <config drawopts="MC|DATA|COV|INVCOV" />
 ```
 This controls the outputs that are saved by NUISANCE, but this is more than enough for our purposes here.
+</details>
 
 ### Analyzing the NUISANCE output
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
