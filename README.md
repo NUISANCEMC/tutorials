@@ -102,7 +102,12 @@ sudo docker run --rm -v $(pwd):/output -w /output wilkinsonnu/nuisancemc:tutoria
 ```
 When examples suggest opening files with ROOT and browsing with ROOT's GUI `TBrowser`, you will need to use your local copy of ROOT instead... or be very confident that you know how to sort out X11 forwarding between the container and your host machine.
 
+<details>
+
+<summary>Running the event generation packages</summary>
+
 ## Running the event generation packages
+
 Neutrino event generators provide executables for making neutrino events with simple starting conditions, which are sufficient for comparisons to cross-section data. More complicated applications with a full neutrino flux simulation and a realistic detector geometry require dedicated applications, but the experiments that produce data devote a lot of time and effort to account for or simply express, the effect of these, and produce cross-section data which generally does not require specific knowledge of their experiments other than the simplified flux distributions and the target material of interest.
 
 Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event enerator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
@@ -481,6 +486,8 @@ The output file `fit_GENIEv3_example.root` contains a lot of the same informatio
 * +Various summary histograms which are simple copies of information in the `fit_result` tree
 
 where `<sample_name>` is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
+
+</details>
 
 </details>
 
