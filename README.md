@@ -133,7 +133,12 @@ or if you're using a local version of root.
 ```
 root -l  MC_inputs/minerva_le_flux.root
 ```
-Then open up a TBrowser with `TBrowser b` and explore the histograms contained through the GUI.
+Then open up a TBrowser with `TBrowser b` and explore the histograms contained through the GUI, i.e.
+```
+Your command                        --> root -l MC_inputs/minerva_le_flux.root
+ROOT saying it's attaching the file --> root [0] Attaching file MC_inputs/minerva_le_flux.root as _file0...
+Your command                        --> root [1] TBrowser b
+```
 
 Note that the example scripts below can be easily modified to take different input fluxes or use different targets, but also note that NUISANCE is not generating these events, the event generators are!
 
