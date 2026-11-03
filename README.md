@@ -1,12 +1,12 @@
 # Interactive NUISANCE tutorials
 
-Assuming you have git installed get a local copy of the files in this directory:
+Assuming you have `git` installed get a local copy of the files in this directory:
 ```
 git clone https://github.com/NUISANCEMC/tutorials.git nuisance_tutorials
 ```
-If you don't have git, you *could* also download a zip file from the green code tab on the front page. But... just install git.
+If you don't have git, you *could* also download a zip file from the green code tab on the front page, or [here](https://github.com/NUISANCEMC/tutorials/archive/refs/heads/main.zip). But... just install git: you'll need it for a lot more than just this tutorial.
 
-All of the work will be done within `nuisance_tutorials`, so:
+All of the work will be done within the `nuisance_tutorials` directory, so:
 ```
 cd nuisance_tutorials
 ```
@@ -25,6 +25,10 @@ For these tutorials, we have a docker *container* which is hosted on dockerhub a
 Although the containers are built using docker, most container runtime environments are able to run them. For security reasons, although it is a standard for industry use of containers, most HEP computing systems we use do not support docker. There isn't really a standard, and there are several home-grown container *runtime* environments for running containers supported by different major HEP computing sites. For this tutorial, we're using singularity as the default option, as it is probably the most common for High Performance Computing sites used in HEP. However, it will not run natively on Mac or Windows machines, so we've provided docker examples as well.
 
 You can also use any other container runtime environment you're familiar with that supports docker images. Good luck.
+
+<details>
+
+<summary>Singularity</summary>
 
 ### Singularity
 Instructions for installing singularity on linux can be found here: https://sylabs.io/guides/3.10/admin-guide/installation.html
@@ -56,6 +60,12 @@ Then you can play around with the sandbox interactively:
 sudo singularity shell --writable <my_sandbox_dir>
 ```
 Note that you need to be root to do this, and again, you can also modify your host system as root, which is more dangerous. You won't need the sandbox functionality at all durin gthis tutorial.
+
+</details>
+
+<details>
+
+<summary>docker</summary>
 
 ### docker
 Instructions for installing docker on different systems can be found here: https://docs.docker.com/desktop/
@@ -101,6 +111,8 @@ with
 sudo docker run --rm -v $(pwd):/output -w /output wilkinsonnu/nuisancemc:tutorial <...>
 ```
 When examples suggest opening files with ROOT and browsing with ROOT's GUI `TBrowser`, you will need to use your local copy of ROOT instead... or be very confident that you know how to sort out X11 forwarding between the container and your host machine.
+
+</details>
 
 <details>
 
