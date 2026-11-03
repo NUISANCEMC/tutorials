@@ -166,7 +166,12 @@ If you need, you can download them all from there, or with the command:
 wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/ MC_outputs
 ```
 
+<details>
+
+<summary>GENIE</summary>
+
 ### GENIE
+
 [GENIE](http://www.genie-mc.org/) is the most widely used neutrino interaction simulation packages currently used in the field. It can simulate neutrino energies from MeV to PeV scales, and also has support for electron-nucleus scattering, photon-nucleus scattering, pion-nucleus scattering, and even provides support for simulating various dark matter models.
 
 In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented here: https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf
@@ -202,7 +207,14 @@ In these files, splines are available for the targets hydrogen, carbon, oxygen a
 
 For full information on the physics content of the tunes, refer to https://genie-mc.github.io/tunes.html, where you can also find details on other available tunes!
 
+</details>
+
+<details>
+
+<summary>NUWRO</summary>
+
 ### NUWRO
+
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
@@ -228,7 +240,14 @@ singularity exec  nuisance_nustec2026.sif ls -l /opt/generators/nuwro/data/targe
 singularity exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/CH.txt
 ```
 
+</details>
+
+<details>
+
+<summary>NEUT</summary>
+
 ### NEUT
+
 [NEUT](https://arxiv.org/abs/2106.15809) is neutrino generator with a long pedigree, originally written in  pre-standard(!) FORTRAN in the 1980's for the Kamiokande experiment in Japan. It remains the primary generator used by the Super-Kamiokande and T2K collaborations, and has been semi-continuously developed ever since. For recent documentation, see: https://arxiv.org/abs/2106.15809
 
 NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate events 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
@@ -252,7 +271,14 @@ Important parameters you will need to control in the NEUT card files:
 * `NEUT-NUMATOM`: total number of nucleons (it's redundant but has to be set)
 `neutroot2` is not able to simulate complex molecular targets, just single elements with additional hydrogen components, but that's sufficient for most purposes. Alternative event generation applications are provided to generate events with more complex targets and geometries.
 
+</details>
+
+<details>
+
+<summary>NUISANCE</summary>
+
 ## NUISANCE
+
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, and compares it to measured data and other generators. The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. Then the published uncertainty (and covariance) are used to calculate the degree of compatibility between the data and Monte Carlo simulation.
 
 NUISANCE also links directly to the event reweighting packages provided by the generators (more on that later), and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
@@ -455,5 +481,7 @@ The output file `fit_GENIEv3_example.root` contains a lot of the same informatio
 * +Various summary histograms which are simple copies of information in the `fit_result` tree
 
 where `<sample_name>` is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
+
+</details>
 
 </details>
