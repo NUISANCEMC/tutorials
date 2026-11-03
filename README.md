@@ -314,7 +314,12 @@ If run without this line, *for these measurement* NUISANCE will refuse to run be
 This controls the outputs that are saved by NUISANCE, but this is more than enough for our purposes here.
 </details>
 
+<details>
+
+<summary>Analyzing the NUISANCE output</summary>
+
 ### Analyzing the NUISANCE output
+
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
 singularity exec nuisance_nustec2026.sif root -l <file_name.root>
@@ -351,6 +356,8 @@ singularity exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
 It is also possible to make a similar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
+
+</details>
 
 ### Event reweighting
 All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
