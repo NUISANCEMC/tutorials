@@ -232,11 +232,11 @@ For full information on the physics content of the tunes, refer to https://genie
 
 </details>
 
-### NUWRO
+### NuWro
 
 <details>
 
-<summary>NUWRO</summary>
+<summary>NuWro</summary>
 
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
