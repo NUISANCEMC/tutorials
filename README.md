@@ -114,11 +114,10 @@ When examples suggest opening files with ROOT and browsing with ROOT's GUI `TBro
 
 </details>
 
+## Running the event generation packages
 <details>
 
 <summary>Running the event generation packages</summary>
-
-## Running the event generation packages
 
 Neutrino event generators provide executables for making neutrino events with simple starting conditions, which are sufficient for comparisons to cross-section data. More complicated applications with a full neutrino flux simulation and a realistic detector geometry require dedicated applications, but the experiments that produce data devote a lot of time and effort to account for or simply express, the effect of these, and produce cross-section data which generally does not require specific knowledge of their experiments other than the simplified flux distributions and the target material of interest.
 
@@ -183,11 +182,11 @@ If you need, you can download them all from there, or with the command:
 wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/ MC_outputs
 ```
 
+### GENIE
+
 <details>
 
 <summary>GENIE</summary>
-
-### GENIE
 
 [GENIE](http://www.genie-mc.org/) is the most widely used neutrino interaction simulation packages currently used in the field. It can simulate neutrino energies from MeV to PeV scales, and also has support for electron-nucleus scattering, photon-nucleus scattering, pion-nucleus scattering, and even provides support for simulating various dark matter models.
 
@@ -226,11 +225,11 @@ For full information on the physics content of the tunes, refer to https://genie
 
 </details>
 
+### NUWRO
+
 <details>
 
 <summary>NUWRO</summary>
-
-### NUWRO
 
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
@@ -259,11 +258,11 @@ singularity exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/
 
 </details>
 
+### NEUT
+
 <details>
 
 <summary>NEUT</summary>
-
-### NEUT
 
 [NEUT](https://arxiv.org/abs/2106.15809) is neutrino generator with a long pedigree, originally written in  pre-standard(!) FORTRAN in the 1980's for the Kamiokande experiment in Japan. It remains the primary generator used by the Super-Kamiokande and T2K collaborations, and has been semi-continuously developed ever since. For recent documentation, see: https://arxiv.org/abs/2106.15809
 
@@ -290,11 +289,11 @@ Important parameters you will need to control in the NEUT card files:
 
 </details>
 
+## NUISANCE
+
 <details>
 
 <summary>NUISANCE</summary>
-
-## NUISANCE
 
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, and compares it to measured data and other generators. The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. Then the published uncertainty (and covariance) are used to calculate the degree of compatibility between the data and Monte Carlo simulation.
 
@@ -303,11 +302,12 @@ NUISANCE also links directly to the event reweighting packages provided by the g
 ### Using the NUISANCE flat trees
 [See the separate readme in the scripts directory](scripts/README.md)
 
+### Making simple data-MC comparisons
+
 <details>
 
 <summary>Making simple data--MC comparisons</summary>
 
-### Making simple data-MC comparisons
 
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
@@ -357,11 +357,11 @@ If run without this line, *for these measurement* NUISANCE will refuse to run be
 This controls the outputs that are saved by NUISANCE, but this is more than enough for our purposes here.
 </details>
 
+### Analyzing the NUISANCE output
+
 <details>
 
 <summary>Analyzing the NUISANCE output</summary>
-
-### Analyzing the NUISANCE output
 
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
@@ -402,10 +402,11 @@ It is also possible to make a similar plot with the linearized 2D data and predi
 
 </details>
 
-<details>
-<summary>Event reweighting</summary>
-
 ### Event reweighting
+
+<details>
+
+<summary>Event reweighting</summary>
 
 All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
 
@@ -417,10 +418,11 @@ Although commonly used, a fundamental limitation of reweighting is that regions 
 
 </details>
 
-<details>
-<summary>Varying parameters</summary>
-
 ### Varying parameters
+
+<details>
+
+<summary>Varying parameters</summary>
 
 NUISANCE can link to various reweighting packages in order to calculate reweighting factors event by event for a given set of parameter variations. These reweighting packages could be from the event generators themselves, or additional reweighting packages such as those produced by many experiments. It is also possible to implement simple reweighting parameters in NUISANCE, although historically this has mostly been done for rapid development of a dial destined for another package. Again, NUISANCE is not (or at least rarely) doing the heavy lifting, it is a high-level tool that builds on top of the existing event generators!
 
@@ -464,11 +466,12 @@ The output image in both cases is a png image showing how the $\pm$1$\sigma$ shi
 Any number of parameters can be set, as long as they can be applied to the samples included in the card file. For example, you might want to include reweightale parameters from GENIE, and also include reweighting parameters in experiment-specific reweighting packages which are designed to work with GENIE. Each dial will calculate a weight for some or all events --- when multiple dials are included, the weight that will be stored for each event (and used to fill the summary histograms we're looking at in the example), will be the product of the weights from each dial.
 </details>
 
+### Fitting parameters
+
 <details>
 
 <summary>Fitting parameters</summary>
 
-### Fitting parameters
 NUISANCE is also able to vary specified parameters and find the values of those parameters that minimizes the chi-square test-statistic with respect to a desired set of samples. It will also calculate the postfit covariance matrix, and produce the best fit histograms, as well as storing a lot of information about the fit. The fitting itself is carried out by MINUIT by default. Again, NUISANCE isn't re-inventing the wheel!
 
 To include parameters in the fit, they must be added to the NUISANCE card file with the format:
