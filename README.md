@@ -261,8 +261,11 @@ NUISANCE also links directly to the event reweighting packages provided by the g
 [See the separate readme in the scripts directory](scripts/README.md)
 
 <details>
+
 <summary>Making simple data--MC comparisons</summary>
-### Making simple data--MC comparisons
+
+### Making simple data-MC comparisons
+
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
 A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_example.sh`, which can be run with:
