@@ -11,7 +11,7 @@ All of the work will be done within the `nuisance_tutorials` directory, so:
 cd nuisance_tutorials
 ```
 
-## Pre-made example files:
+## Pre-made example files
 Many of the generator input files will be made within the tutorial, but we have prepared a few high-statistics files in advance for some exercises. These can be obtained by sourcing the script:
 ```
 source download_files_forNuSTEC2024.sh
@@ -181,6 +181,8 @@ If you need, you can download them all from there, or with the command:
 ```
 wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/ MC_outputs
 ```
+
+</details>
 
 ### GENIE
 
@@ -502,7 +504,6 @@ The output file `fit_GENIEv3_example.root` contains a lot of the same informatio
 
 where `<sample_name>` is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
 
-</details>
 
 </details>
 
