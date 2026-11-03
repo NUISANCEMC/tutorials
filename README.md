@@ -135,9 +135,9 @@ root -l  MC_inputs/minerva_le_flux.root
 ```
 Then open up a TBrowser with `TBrowser b` and explore the histograms contained through the GUI, i.e.
 ```
-Your command                        --> root -l MC_inputs/minerva_le_flux.root
-ROOT saying it's attaching the file --> root [0] Attaching file MC_inputs/minerva_le_flux.root as _file0...
-Your command                        --> root [1] TBrowser b
+Your command in the shell           --> root -l MC_inputs/minerva_le_flux.root
+ROOT saying it's attached the file  --> root [0] Attaching file MC_inputs/minerva_le_flux.root as _file0...
+Your command in root                --> root [1] TBrowser b
 ```
 
 Note that the example scripts below can be easily modified to take different input fluxes or use different targets, but also note that NUISANCE is not generating these events, the event generators are!
@@ -302,9 +302,17 @@ Important parameters you will need to control in the NEUT card files:
 
 <summary>NUISANCE</summary>
 
-[NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, and compares it to measured data and other generators. The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. Then the published uncertainty (and covariance) are used to calculate the degree of compatibility between the data and Monte Carlo simulation.
+[NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, converts them internally into a common format, and compares the generator predictions to measured data and other generators. 
 
-NUISANCE also links directly to the event reweighting packages provided by the generators (more on that later), and provided tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets. Finally, it provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
+The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. 
+
+The uncertainty (and covariances) from the publications are used to calculate the degree of compatibility between the data and Monte Carlo simulation, in the form of a chi-square, and the output is given in a root file, containing the data and the prediction, along with other plots which can help diagnose issues.
+
+NUISANCE can be linked directly to the event reweighting packages provided by the generators (more on that later), if they are available. 
+
+There are also tools for implementing simple event reweighting independent of the generators, so that the goodness of fit between data and simulation can be assessed for different parameter sets with parameters from different sources. 
+
+Finally, NUISANCE also provides an interface to parameter fitting methods so that model parameters can be varied in a fit to data, and the best fit solution and associated uncertainties can be extracted, using any desired ensemble of datasets.
 
 ### Using the NUISANCE flat trees
 [See the separate readme in the scripts directory](scripts/README.md)
@@ -313,7 +321,7 @@ NUISANCE also links directly to the event reweighting packages provided by the g
 
 <details>
 
-<summary>Making simple data--MC comparisons</summary>
+<summary>Making simple data-MC comparisons</summary>
 
 
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
