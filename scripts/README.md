@@ -1,29 +1,37 @@
 ### Using the NUISANCE flat trees
+
+#### Background
 The NUISANCE flat trees provide a simple common flat tree format which is the same for all generators. This makes it very easy to compare features of different generators, and explore the physics that is implemented in them.
 
-The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus, and the full particle stack; before the interaction, after the nucleon interaction, and after the final state interactions.
+The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus and nucleon PDG codes, and the full particle stack before the interaction, after the nucleon interaction, and after the final state interactions.
 
-Scripts proceed via usual ROOT macros and only require ROOT to be installed; no need for generator stacks or similar. If someone has been kind enough to pre-generate flat-trees for you (see for example `download_files_forNuSTEC2024.sh`), you can get quite knowledgable about generator physics without ever running them!
+Additionally, the flat trees can also be used to directly compare the generators to data.
+
+Scripts to analyse the flat trees proceed via usual ROOT macros and only require ROOT to be installed; there is no need for the full generator stack to be installed (although we do provide containers with and instructions on how to run them in the `tutorials` directory!)
+
+If someone has been kind enough to pre-generate flat-trees for you (see for example `download_files_forNuSTEC2026.sh`), you can get quite knowledgable about generator physics without ever running them!
 
 If the concept of a `TTree` is completely new to you, you'll likely find this ROOT tutorial useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
 
 The example scripts all use the style of command `root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'`.
 
 #### Simple analysis using `TTree::Draw`
-An example script using simple `TTree::Draw` commands has been provided in `flat_w_bymode.cpp`. The central part of the script is
+An example script using simple `TTree::Draw` commands has been provided in `flat_bymode.cpp`. This script draws the distribution of a variable in the flat-tree, both the total, and each contribution from the interaction modes.
+
+The central part of the script is
 ```
   int nModes = 30;
   double scale = tree->GetMaximum("fScaleFactor");
 
   TH1D **w = new TH1D*[nModes];
   for (int i = 0; i < nModes; ++i) {
-    tree->Draw(Form("W>>h%i(50,0.5,3)", i), Form("Mode==%i", i));
-    w[i] = (TH1D*)gDirectory->Get(Form("h%i", i));
-    w[i]->SetTitle(Form("W (Mode==%i);W (GeV/c^{2});d#sigma/dW (cm^{2}/(GeV/c^{2})/nucleon)", i));
+    tree->Draw(Form("%s>>h%i(%s)", variable.c_str(), i, binning.c_str()), Form("Mode==%i", i));
   }
   tree->Draw("W>>h00(50, 0.5, 3)", "Mode<30");
 ```
 which draws all interaction modes below 30 (which means charged current), called `hN` where `N` is the Nth interaction mode, and the total, called `h00`.
+
+We will go over a few examples using this script in the lectures.
 
 #### Analysis using the particle stack
 Two examples drawing from the full particle stack are also provided, see `flat_calo_bias.cpp` and `flat_pion_mom.cpp`. Here, the central part is the looping over the final state particle stacks:
