@@ -13,7 +13,11 @@ If someone has been kind enough to pre-generate flat-trees for you (see for exam
 
 If the concept of a `TTree` is completely new to you, you'll likely find this ROOT tutorial useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
 
-The example scripts all use the style of command `root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'`.
+The example scripts all use the same style of command, and you run the script with
+```
+root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'
+```
+and optional arguments can be given (see the source files).
 
 #### Simple analysis using `TTree::Draw`
 An example script using simple `TTree::Draw` commands has been provided in [`flat_bymode.cpp`](flat_bymode.cpp). This script draws the distribution of a variable in the flat-tree, both the total, and each contribution from the interaction modes.
