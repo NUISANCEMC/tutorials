@@ -19,6 +19,16 @@ root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'
 ```
 and optional arguments can be given (see the source files).
 
+#### Pre-made flat-tree files
+In addition to running the generators via containers, you can do analyses on the pre-generated flat-trees that have been prepared. 
+
+We host TBs of pre-generated files at NERSC, and here you'll download a small subset of them, but enough to get you started. This will download *~2.5 GB* of files to the `MC_outputs` directory.
+
+These can be obtained by running the script:
+```
+./download_files_forNuSTEC2026.sh
+```
+
 #### Simple analysis using `TTree::Draw`
 An example script using simple `TTree::Draw` commands has been provided in [`flat_bymode.cpp`](flat_bymode.cpp). This script draws the distribution of a variable in the flat-tree, both the total charged-current contribution, and the contribution from each of the interaction modes.
 

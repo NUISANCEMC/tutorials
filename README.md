@@ -11,12 +11,10 @@ All of the work will be done within the `nuisance_tutorials` directory, so:
 cd nuisance_tutorials
 ```
 
-## Pre-made example files
-Many of the generator input files will be made within the tutorial, but we have prepared a few high-statistics files in advance for some exercises. These can be obtained by sourcing the script:
-```
-source download_files_forNuSTEC2024.sh
-```
-This will download ~1.6 GB of files to `MC_outputs` inside the git repo.
+## Pre-made flat-tree files
+Many of the generator input files will be made within the tutorial, but we have prepared a few high-statistics files in advance for some exercises. Alternatively, if you for some reason can not or do not want to run the generators, these flat-tree files can be used for simpler analyses too.
+
+You can find more information on getting and using these in (scripts/README.md)[scripts/README.md].
 
 ## Getting and using the tutorial containers
 
