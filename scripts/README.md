@@ -9,14 +9,14 @@ Additionally, the flat trees can also be used to directly compare the generators
 
 Scripts to analyse the flat trees proceed via usual ROOT macros and only require ROOT to be installed; there is no need for the full generator stack to be installed (although we do provide containers with and instructions on how to run them in the `tutorials` directory!)
 
-If someone has been kind enough to pre-generate flat-trees for you (see for example `download_files_forNuSTEC2026.sh`), you can get quite knowledgable about generator physics without ever running them!
+If someone has been kind enough to pre-generate flat-trees for you (see for example [`download_files_forNuSTEC2026.sh`](download_files_forNuSTEC2026.sh), you can get quite knowledgable about generator physics without ever running them!
 
 If the concept of a `TTree` is completely new to you, you'll likely find this ROOT tutorial useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
 
 The example scripts all use the style of command `root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'`.
 
 #### Simple analysis using `TTree::Draw`
-An example script using simple `TTree::Draw` commands has been provided in `flat_bymode.cpp`. This script draws the distribution of a variable in the flat-tree, both the total, and each contribution from the interaction modes.
+An example script using simple `TTree::Draw` commands has been provided in [`flat_bymode.cpp`](flat_bymode.cpp). This script draws the distribution of a variable in the flat-tree, both the total, and each contribution from the interaction modes.
 
 The central part of the script is
 ```
@@ -34,7 +34,7 @@ which draws all interaction modes below 30 (which means charged current), called
 We will go over a few examples using this script in the lectures.
 
 #### Analysis using the particle stack
-Two examples drawing from the full particle stack are also provided, see `flat_calo_bias.cpp` and `flat_pion_mom.cpp`. Here, the central part is the looping over the final state particle stacks:
+Two examples drawing from the full particle stack are also provided, see [`flat_calo_bias.cpp`](flat_calo_bias.cpp) and [`flat_pion_mom.cpp`](flat_pion_mom.cpp). Here, the central part is the looping over the final state particle stacks:
 ```
     for (int j = 0; j < nfsp; ++j) {
       if (pdg[j] == 211) {
