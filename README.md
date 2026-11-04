@@ -191,12 +191,10 @@ wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/
 
 ### GENIE
 
-<details>
-
-<summary>GENIE</summary>
-
 [GENIE](http://www.genie-mc.org/) is the most widely used neutrino interaction simulation packages currently used in the field. It can simulate neutrino energies from MeV to PeV scales, and also has support for electron-nucleus scattering, photon-nucleus scattering, pion-nucleus scattering, and even provides support for simulating various dark matter models.
 
+<details>
+<summary>GENIE event generation</summary>
 In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented here: https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf
 
 An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `generation_GENIEv3_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
@@ -234,12 +232,10 @@ For full information on the physics content of the tunes, refer to https://genie
 
 ### NuWro
 
-<details>
-
-<summary>NuWro</summary>
-
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
+<details>
+<summary>NuWro event generation </summary>
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
 ```
 singularity exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
@@ -266,14 +262,11 @@ singularity exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/
 </details>
 
 ### NEUT
-
-<details>
-
-<summary>NEUT</summary>
-
 [NEUT](https://arxiv.org/abs/2106.15809) is neutrino generator with a long pedigree, originally written in  pre-standard(!) FORTRAN in the 1980's for the Kamiokande experiment in Japan. It remains the primary generator used by the Super-Kamiokande and T2K collaborations, and has been semi-continuously developed ever since. For recent documentation, see: https://arxiv.org/abs/2106.15809
 
-NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate events 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
+<details>
+<summary>NEUT event generation</summary>
+NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
 ```
 singularity exec nuisance_nustec2026.sif /bin/bash generation_NEUT_example.sh
 ```
@@ -293,6 +286,21 @@ Important parameters you will need to control in the NEUT card files:
 * `NEUT-NUMFREP`: number of free protons to include
 * `NEUT-NUMATOM`: total number of nucleons (it's redundant but has to be set)
 `neutroot2` is not able to simulate complex molecular targets, just single elements with additional hydrogen components, but that's sufficient for most purposes. Alternative event generation applications are provided to generate events with more complex targets and geometries.
+
+</details>
+
+### GiBUU
+[GiBUU](https://gibuu.hepforge.org/trac/wiki) is a multi-purpose, theory-focused, event generator which can simulate neutrino-, electron-, photon- and hadron-nucleus interactions, as well as heavy ion collisions, written in Fortran. The stand-out feature of GiBUU for neutrino-interaction studies is a consistent and sophisticated treatment of the nucleus, most notably in final-state interactions, in which the evolution of all particles is calculated in discrete time steps, with every particle feeling the potential of each other, as well as the excited nuclear remnant. However, as with all generators, a few sentence summary will not do it justice, and details can be found in [recent GiBUU tutorials](https://gibuu.hepforge.org/trac/wiki/tutorial19).
+
+<details>
+  <summary>GiBUU event generation</summary>
+  GiBUU is fast and easy to run, but differs from other event generators in a number of ways. Like NEUT and NuWro, it uses an input (job) file which has a wealth of available options. An arbitrary flux can be specified, however, each job is only capable of producing interactions between a single incident neutrino flavour and nuclear target, and is limited to either charged- or neutral-current interactions. Multiple jobs have to be combined to overcome this, which introduces a little bit of extra bookkeeping.
+
+An example generation script is provided, which generates $\nu_{\mu}$ interactions on both carbon and hydrogen separately, for the MINERvA low energy neutrino-enhanced flux. The output files are then combined into a single file with NUISANCE in the last step. It should take ~10 minutes to run.
+```
+singularity exec nuisance_nustec2026.sif /bin/bash generation_GiBUU_example.sh
+```
+Several other differences are probably apparent. Unlike the other generators, GiBUU does not accept an argument specifying the number of particles to generate. Additionally, if you look at the output NUISANCE flat tree, the `InputWeights`, which are pass-through from the generator, are not 1. These are related. GiBUU does not carry out the usual accept-reject methods that the other generators use. Instead, to over-simplify, it tries to generate a certain number of events which are the `num_ensembles*A`, and for each process that occurs whilst simulating that full event, including the particle transport through the nucleus, it picks up a factor, the product of which translate to an overall event probability. Events which are blocked are simply dropped, leading to a non-fixed number of interactions for any job card.
 
 </details>
 
