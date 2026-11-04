@@ -24,18 +24,18 @@ An example script using simple `TTree::Draw` commands has been provided in [`fla
 
 The central part of the script is
 ```
-  int nModes = 30;
+  const int nModes = 30;
   double scale = tree->GetMaximum("fScaleFactor");
 
   TH1D **w = new TH1D*[nModes];
   for (int i = 0; i < nModes; ++i) {
     tree->Draw(Form("%s>>h%i(%s)", variable.c_str(), i, binning.c_str()), Form("Mode==%i", i));
   }
-  tree->Draw("W>>h00(50, 0.5, 3)", "Mode<30");
+  tree->Draw(Form("%s>>h00(%s)", variable.c_str(), binning.c_str()), Form("Mode<%i", nModes));
 ```
 which draws all interaction modes below 30 (which means charged current), called `hN` where `N` is the Nth interaction mode, and the total, called `h00`.
 
-We will go over a few examples using this script in the lectures.
+We will go over a few examples using and extending this script in the lectures.
 
 #### Analysis using the particle stack
 Two examples drawing from the full particle stack are also provided, see [`flat_calo_bias.cpp`](flat_calo_bias.cpp) and [`flat_pion_mom.cpp`](flat_pion_mom.cpp). Here, the central part is the looping over the final state particle stacks:
