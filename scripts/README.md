@@ -9,7 +9,7 @@ Additionally, the flat trees can also be used to directly compare the generators
 
 Scripts to analyse the flat trees proceed via usual ROOT macros and only require ROOT to be installed; there is no need for the full generator stack to be installed (although we do provide containers with and instructions on how to run them in the `tutorials` directory!)
 
-If someone has been kind enough to pre-generate flat-trees for you (see for example [`download_files_forNuSTEC2026.sh`](download_files_forNuSTEC2026.sh)), you can get quite knowledgable about generator physics without ever running them!
+If someone has been kind enough to pre-generate flat-trees for you (see [below](#pre-made-flat-tree-files)), you can get quite knowledgable about generator physics without ever running them!
 
 If the concept of a `TTree` is completely new to you, you'll likely find the ROOT tutorials useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
 
@@ -22,7 +22,7 @@ and optional arguments can be given (see the source files).
 #### Pre-made flat-tree files
 In addition to running the generators via containers, you can do analyses on the pre-generated flat-trees that have been prepared. 
 
-We host TBs of pre-generated files at NERSC, and here you'll download a small subset of them, but enough to get you started. This will download *~2.5 GB* of files to the `MC_outputs` directory.
+We host TBs of pre-generated files at NERSC, and here you'll download a small subset of them, but enough to get you started. This will download **~2.5 GB** of files to the `MC_outputs` directory.
 
 These can be obtained by running the script:
 ```
