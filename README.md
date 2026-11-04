@@ -14,7 +14,7 @@ cd nuisance_tutorials
 ## Pre-made flat-tree files
 Many of the generator input files will be made within the tutorial, but we have prepared a few high-statistics files in advance for some exercises. Alternatively, if you for some reason can not or do not want to run the generators, these flat-tree files can be used for simpler analyses too.
 
-You can find more information on getting and using these in (scripts/README.md)[scripts/README.md].
+You can find more information on getting and using these in [`scripts/README.md`](scripts/README.md).
 
 ## Getting and using the tutorial containers
 
