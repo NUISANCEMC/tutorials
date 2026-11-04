@@ -3,15 +3,15 @@
 #### Background
 The NUISANCE flat trees provide a simple common flat tree format which is the same for all generators. This makes it very easy to compare features of different generators, and explore the physics that is implemented in them.
 
-The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub>, the target nucleus and nucleon PDG codes, and the full particle stack before the interaction, after the nucleon interaction, and after the final state interactions.
+The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub> (neutrino energy), the target nucleus and nucleon PDG codes, and the full particle stack before the interaction, after the nucleon interaction, and after the final state interactions.
 
 Additionally, the flat trees can also be used to directly compare the generators to data.
 
 Scripts to analyse the flat trees proceed via usual ROOT macros and only require ROOT to be installed; there is no need for the full generator stack to be installed (although we do provide containers with and instructions on how to run them in the `tutorials` directory!)
 
-If someone has been kind enough to pre-generate flat-trees for you (see for example [`download_files_forNuSTEC2026.sh`](download_files_forNuSTEC2026.sh), you can get quite knowledgable about generator physics without ever running them!
+If someone has been kind enough to pre-generate flat-trees for you (see for example [`download_files_forNuSTEC2026.sh`](download_files_forNuSTEC2026.sh)), you can get quite knowledgable about generator physics without ever running them!
 
-If the concept of a `TTree` is completely new to you, you'll likely find this ROOT tutorial useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
+If the concept of a `TTree` is completely new to you, you'll likely find the ROOT tutorials useful: https://root.cern.ch/root/htmldoc/guides/users-guide/Trees.html.
 
 The example scripts all use the same style of command, and you run the script with
 ```
@@ -20,7 +20,7 @@ root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'
 and optional arguments can be given (see the source files).
 
 #### Simple analysis using `TTree::Draw`
-An example script using simple `TTree::Draw` commands has been provided in [`flat_bymode.cpp`](flat_bymode.cpp). This script draws the distribution of a variable in the flat-tree, both the total, and each contribution from the interaction modes.
+An example script using simple `TTree::Draw` commands has been provided in [`flat_bymode.cpp`](flat_bymode.cpp). This script draws the distribution of a variable in the flat-tree, both the total charged-current contribution, and the contribution from each of the interaction modes.
 
 The central part of the script is
 ```
@@ -33,7 +33,7 @@ The central part of the script is
   }
   tree->Draw(Form("%s>>h00(%s)", variable.c_str(), binning.c_str()), Form("Mode<%i", nModes));
 ```
-which draws all interaction modes below 30 (which means charged current), called `hN` where `N` is the Nth interaction mode, and the total, called `h00`.
+which first draws each of the interaction modes, and then draws all interaction modes below 30 (which means charged current).
 
 We will go over a few examples using and extending this script in the lectures.
 
