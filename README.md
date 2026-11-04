@@ -312,10 +312,6 @@ Several other differences are probably apparent. Unlike the other generators, Gi
 
 ## NUISANCE
 
-<details>
-
-<summary>NUISANCE</summary>
-
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, converts them internally into a common format, and compares the generator predictions to measured data and other generators. 
 
 The advantage is that the type of input is opaque to the user (e.g., the different generator outputs don't need to be understood in detail), and the relevant selection cuts are applied to the generated events to reflect the measurement of interest. 
@@ -530,8 +526,5 @@ The output file `fit_GENIEv3_example.root` contains a lot of the same informatio
 * +Various summary histograms which are simple copies of information in the `fit_result` tree
 
 where `<sample_name>` is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
-
-
-</details>
 
 </details>
