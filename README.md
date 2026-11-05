@@ -465,7 +465,7 @@ These may also change based on the model used to initially generate the events, 
 ```
  <config GENIETune="AR23_20i_00_000" />
  ```
- You can look up these values in `$GENIE/config`. For example, you can find the $\pm$1 $\sigma$ shift values from `${GENIE}/config/GSystUncertaintyTable.xml`, and the nominal value from `$GENIE/config/AR23_20i/CommonParam.xml`, where only the latter is tune-specific.
+You can look up these values in `$GENIE/config`. For example, you can find the $\pm$1 $\sigma$ shift values from `${GENIE}/config/GSystUncertaintyTable.xml`, and the nominal value from `$GENIE/config/AR23_20i/CommonParam.xml`, where only the latter is tune-specific.
 
 Finally, one can also change the meaning of the dial value change to be as a fraction of the initial value by adding the following line to the NUISANCE card file:
 ```
@@ -497,17 +497,17 @@ Any number of parameters can be set, as long as they can be applied to the sampl
 
 <summary>Fitting parameters</summary>
 
-NUISANCE is also able to vary specified parameters and find the values of those parameters that minimizes the chi-square test-statistic with respect to a desired set of samples. It will also calculate the postfit covariance matrix, and produce the best fit histograms, as well as storing a lot of information about the fit. The fitting itself is carried out by MINUIT by default. Again, NUISANCE isn't re-inventing the wheel!
+NUISANCE is also able to vary specified parameters and find the values of those parameters that minimizes the $\chi^{2}$ test-statistic with respect to a desired set of samples. It will also calculate the postfit covariance matrix, and produce the best fit histograms, as well as storing a lot of information about the fit. The fitting itself is carried out by MINUIT by default. Again, NUISANCE isn't re-inventing the wheel!
 
 To include parameters in the fit, they must be added to the NUISANCE card file with the format:
 ```
  <parameter name="MaCCRES" nominal="0" type="genie_parameter"low="-1" high="5" step="0.1" state="FREE" />
 ```
 This adds a few more fields to the parameter line(s) of the card file with respect to previous examples:
-*low: the minimum value that the parameter is allowed to take in the fit
-*high: the maximum value that the parameter is allowed to take in the fit
-*step: gives the fitter a hint about how large the expected variation should be, but it will re-optimize the step size itself very quickly
-*state: can be "FREE", meaning it varies in the fit, or "FIX" (default) meaning it is not
+* low: the minimum value that the parameter is allowed to take in the fit
+* high: the maximum value that the parameter is allowed to take in the fit
+* step: gives the fitter a hint about how large the expected variation should be, but it will re-optimize the step size itself very quickly
+* state: can be "FREE", meaning it varies in the fit, or "FIX" (default) meaning it is not
 
 Again, you can add any number of parameters and samples to the fit, but the more there are, the more complex the computational problem, and the longer the fit will take to converge. As such, it's challenging to predict how long a fit will take a priori. Note that for each iteration of the fit, NUISANCE by default will loop over all events in all of the input files required to process the samples, and calculate a weight for each. It will skip events that don't enter any of the requested samples after the first iteration for speed.
 
@@ -518,7 +518,7 @@ singularity exec nuisance_nustec2026.sif nuismin -c fit_GENIEv3_example.card -o 
 
 The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions/modifications:
 * `<sample_name>_MC`: as before, but it now contains the best-fit histogram!
-* `fit_iterations`: a ROOT TTree containing entires for each iteration of the fit, including the chi-square for each sample included and the parameter values
+* `fit_iterations`: a ROOT TTree containing entries for each iteration of the fit, including the chi-square for each sample included and the parameter values
 * `fit_result`: a ROOT TTree with summary information describing the fit configuration and the best-fit information
 * `covariance` (`covariance_free`): the covariance matrix between postfit parameters (with fixed parameters removed)
 * `correlation` (`correlation_free`): the correlation matrix between postfit parameters (with fixed parameters removed)
