@@ -76,7 +76,7 @@ There are a number of NUISANCE utilities for different purposes, but most of wha
 
 A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_example.sh`, which can be run with:
 ```
-singularity exec nuisance_nustec2026.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
 ```
 In this example, data and the GENIEv3 files generated above are compared for four MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
 
@@ -122,13 +122,13 @@ This controls the outputs that are saved by NUISANCE, but this is more than enou
 ### Analyzing the NUISANCE output
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
-singularity exec nuisance_nustec2026.sif root -l <file_name.root>
+apptainer exec nuisance_nustec2026.sif root -l <file_name.root>
 ```
 And then explore the file with the ROOT TBrowser GUI with:
 ```
 TBrowser b
 ```
-**Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for singularity, but possibly not for docker where X11 forwarding is... less seamless**
+**Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for apptainer, but possibly not for docker where X11 forwarding is... less seamless**
 
 Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
 
@@ -147,11 +147,11 @@ Inside the file you'll find a number of ROOT objects:
 
 There are two example scripts for producing a simple plot comparing data and simulation for the 1D datasets produced using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
 ```
-singularity exec  nuisance_nustec2026.sif python3 nominal_plotter.py
+apptainer exec  nuisance_nustec2026.sif python3 nominal_plotter.py
 ```
 Or:
 ```
-singularity exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
+apptainer exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
 ```
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
@@ -192,17 +192,17 @@ Finally, one can also change the meaning of the dial value change to be as a fra
 
 To see the utility of this reweighting in action, there are two example card files, with a positive and negative 1$\sigma$ shift to `MaCCRES` which can generate output with the commands:
 ```
-singularity exec nuisance_nustec2026.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
-singularity exec nuisance_nustec2026.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
 ```
 
 And then the scripts `dial_validation_plotter.C` or `dial_validation_plotter.py` both make validation plots showing the impact of those shifts on the predictions for the MINERvA samples of interest. Run these with either:
 ```
-singularity exec  nuisance_nustec2026.sif python3 dial_validation_plotter.py
+apptainer exec  nuisance_nustec2026.sif python3 dial_validation_plotter.py
 ```
 Or:
 ```
-singularity exec  nuisance_nustec2026.sif root -q -l -b dial_validation_plotter.C
+apptainer exec  nuisance_nustec2026.sif root -q -l -b dial_validation_plotter.C
 ```
 The output image in both cases is a png image showing how the $\pm$1$\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
@@ -225,7 +225,7 @@ Again, you can add any number of parameters and samples to the fit, but the more
 
 To run a fit with a desired card file, using the `nuismin` program, instead of the usual `nuiscomp` used so far. An example card file for running a simple fit with a single free GENIE parameter `MaCCRES`, and a single MINERvA data sample, is given in `fit_GENIEv3_example.card`, which can be processed with:
 ```
-singularity exec nuisance_nustec2026.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
 ```
 
 The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions/modifications:
