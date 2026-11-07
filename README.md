@@ -245,9 +245,7 @@ For full information on the physics content of the tunes, refer to https://genie
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
 <details>
-  
 <summary>NuWro event generation </summary>
-
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
 ```
 apptainer exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
@@ -307,16 +305,21 @@ Important parameters you will need to control in the NEUT card files:
 [GiBUU](https://gibuu.hepforge.org/trac/wiki) is a multi-purpose, theory-focused, event generator which can simulate neutrino-, electron-, photon- and hadron-nucleus interactions, as well as heavy ion collisions, written in Fortran. The stand-out feature of GiBUU for neutrino-interaction studies is a consistent and sophisticated treatment of the nucleus, most notably in final-state interactions, in which the evolution of all particles is calculated in discrete time steps, with every particle feeling the potential of each other, as well as the excited nuclear remnant. However, as with all generators, a few sentence summary will not do it justice, and details can be found in [recent GiBUU tutorials](https://gibuu.hepforge.org/trac/wiki/tutorial19).
 
 <details>
-  
   <summary>GiBUU event generation</summary>
   
-  GiBUU is fast and easy to run, but differs from other event generators in a number of ways. Like NEUT and NuWro, it uses an input (job) file which has a wealth of available options. An arbitrary flux can be specified, however, each job is only capable of producing interactions between a single incident neutrino flavour and nuclear target, and is limited to either charged- or neutral-current interactions. Multiple jobs have to be combined to overcome this, which introduces a little bit of extra bookkeeping.
+GiBUU is fast and easy to run, but differs from other event generators in a number of ways. Like NEUT and NuWro, it uses an input (job) file which has a wealth of available options. An arbitrary flux can be specified, however, each job is only capable of producing interactions between a single incident neutrino flavour and nuclear target, and is limited to either charged- or neutral-current interactions. Multiple jobs have to be combined to overcome this, which introduces a little bit of extra bookkeeping.
 
 An example generation script is provided, which generates $\nu_{\mu}$ interactions on both carbon and hydrogen separately, for the MINERvA low energy neutrino-enhanced flux. The output files are then combined into a single file with NUISANCE in the last step. It should take ~10 minutes to run.
 ```
 apptainer exec nuisance_nustec2026.sif /bin/bash generation_GiBUU_example.sh
 ```
 Several other differences are probably apparent. Unlike the other generators, GiBUU does not accept an argument specifying the number of particles to generate. Additionally, if you look at the output NUISANCE flat tree, the `InputWeights`, which are pass-through from the generator, are not 1. These are related. GiBUU does not carry out the usual accept-reject methods that the other generators use. Instead, to over-simplify, it tries to generate a certain number of events which are the `num_ensembles*A`, and for each process that occurs whilst simulating that full event, including the particle transport through the nucleus, it picks up a factor, the product of which translate to an overall event probability. Events which are blocked are simply dropped, leading to a non-fixed number of interactions for any job card.
+
+It is interesting to look at the distribution of weights produced by GiBUU. A simple script to do so, which splits the weight into the carbon and hydrogen events, can be run with:
+```
+apptainer exec nuisance_nustec2026.sif python3 gibuu_weight_plotter.py MC_outputs/GiBUU_MINERvA_LE_FHC_numu_20k_NUISFLAT.root
+```
+The histogram produced in `gibuu_weights.pdf` shows some interesting features. One obvious feature is how broad the range of weights produced is, and how heavy-tailed the distribution is. One interesting metric is the Kish effective sample size, ESS = $(\Sigma w_{i})^2/\Sigma w_{i}^2$, which is included in the legend. However, this is a little misleading as the bins in which very large weights fall will have a much lower effective sample size. Overall the effect of these weights is to make it difficult to make smooth GiBUU predictions.
 
 </details>
 
