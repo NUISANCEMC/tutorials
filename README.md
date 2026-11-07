@@ -1,15 +1,14 @@
 # Interactive NUISANCE tutorials
 
-Assuming you have `git` installed get a local copy of the files in this directory:
+Assuming you have `git` installed clone the repository and move into it:
 ```
 git clone https://github.com/NUISANCEMC/tutorials.git nuisance_tutorials
-```
-If you don't have git, you *could* also download a zip file from the green code tab on the front page, or [here](https://github.com/NUISANCEMC/tutorials/archive/refs/heads/main.zip). But... just install git: you'll need it for a lot more than just this tutorial.
-
-All of the work will be done within the `nuisance_tutorials` directory, so:
-```
 cd nuisance_tutorials
 ```
+
+If you don't have git, you *could* also download a zip file from the green code tab on the front page, or [here](https://github.com/NUISANCEMC/tutorials/archive/refs/heads/main.zip). But... just install git: you'll need it for a lot more than just this tutorial.
+
+The examples are all intended to be run from within the `nuisance_tutorials` directory, and use shell syntax which _should_ be suitable for Linux, macOS Terminal, and Windows Subsystem for Linux (WSL).
 
 ## Pre-made flat-tree files
 Many of the generator input files will be made within the tutorial, but we have prepared a few high-statistics files in advance for some exercises. Alternatively, if you for some reason can not or do not want to run the generators, these flat-tree files can be used for simpler analyses too.
@@ -20,96 +19,124 @@ You can find more information on getting and using these in [`scripts/README.md`
 
 For these tutorials, we have a docker *container* which is hosted on dockerhub and which contains all of the generators, NUISANCE, and all necessary library dependences (such as ROOT). The advantage of using containers is that you don't need to compile all of this software for your system, and everyone is using exactly the same software stack.
 
-Although the containers are built using docker, most container runtime environments are able to run them. For security reasons, although it is a standard for industry use of containers, most HEP computing systems we use do not support docker. There isn't really a standard, and there are several home-grown container *runtime* environments for running containers supported by different major HEP computing sites. For this tutorial, we're using singularity as the default option, as it is probably the most common for High Performance Computing sites used in HEP. However, it will not run natively on Mac or Windows machines, so we've provided docker examples as well.
+You _do_ need a container runtime environment to run the container, either on your laptop or a system you have access to. Docker, Apptainer, and SingularityCE can all run this image, and you only need one of those runtimes. Apptainer and SingularityCE are common on shared Linux computing systems. Docker Desktop is usually the more straightforward choice on macOS. If you are using a University cluster or HPC, check which runtime it provides before trying to install one yourself. There may be a home-grown container runtime (e.g., shifter at NERSC), which should also be fine, although specific instructions are not provided.
 
-You can also use any other container runtime environment you're familiar with that supports docker images. Good luck.
+<details>
+<summary>Apptainer (Linux and many computing clusters)</summary>
+
+### Apptainer
+Follow your institution’s instructions if Apptainer is already provided, or see the [Apptainer user guide](https://apptainer.org/docs/user/latest/).
+
+From the `nuisance_tutorials` directory, download the container image from dockerhub and save it as a local `.sif` file:
+
+```bash
+apptainer pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
+```
+
+To run a program from the image:
+
+```bash
+apptainer exec nuisance_nustec2026.sif <program> <arguments>
+```
+Here, your current tutorial directory is available **inside** the container, and the program (from the container) starts there. It writes files relative to the tutorial directory on the host. Files elsewhere on your computer may need an additional bind mount before a program in the container can access them.
+
+To explore the container interactively:
+
+```bash
+apptainer shell nuisance_nustec2026.sif
+```
+
+Type `exit` to leave the shell. The image itself is read-only, but **your mounted tutorial files are not**: commands in the container can change or delete them.
+
+</details>
+
 
 <details>
 
-<summary>Singularity</summary>
+<summary>SingularityCE (Linux and some computing clusters)</summary>
 
-### Singularity
-Instructions for installing singularity on linux can be found here: https://sylabs.io/guides/3.10/admin-guide/installation.html
+### SingularityCE
+If your system provides a `singularity` command rather than `apptainer`, you can use the same Docker Hub image. See the [SingularityCE user guide](https://docs.sylabs.io/guides/latest/user-guide/) if you need installation or background information.
 
-You can obtain the container needed for this tutorial with the command:
-```
+From the `nuisance_tutorials` directory:
+
+```bash
 singularity pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
-which will get the container from dockerhub, and convert it to a singularity (.sif) image locally. This step needs an internet connection, and will save a ~1 GB file locally on your system.
 
-Singularity containers can be used in a few different ways, and it can get a bit confusing to remember what is in the container, and what is on the host machine. When you run it, the container has access to your home directory (and all subdirectories) and your current working directory, so it can run software from within the container on files from your host machine. Example commands can look like:
-```
-singularity exec <my_container.sif> do_something.exe /path/to/input <arguments>
-```
-where the program to be run is contained within the container and accessible through the path.
+Run a program, or open an interactive shell, with:
 
-Additionally, you can open up the container and poke around in it with:
-```
-singularity shell <my_container.sif>
-```
-This will open a new shell inside the container. Note that you cannot modify the contents of the container, **but** you can modify your host system! So be careful what you try to delete. Exit the shell with `exit`.
+```bash
+singularity exec nuisance_nustec2026.sif <program> <arguments>
 
-You can also modify the containers interactively by making a sandbox:
+singularity shell nuisance_nustec2026.sif
 ```
-sudo singularity build --sandbox <my_sandbox_dir> <my_container.sif>
-```
-Then you can play around with the sandbox interactively:
-```
-sudo singularity shell --writable <my_sandbox_dir>
-```
-Note that you need to be root to do this, and again, you can also modify your host system as root, which is more dangerous. You won't need the sandbox functionality at all durin gthis tutorial.
+
+For the examples later in the tutorial, you can replace `apptainer` with `singularity`. As with Apptainer, the image is read-only but files in the mounted tutorial directory can be changed. Type `exit` to leave an interactive shell.
 
 </details>
 
 <details>
 
-<summary>docker</summary>
+<summary>Docker (macOS, Linux, or Windows with WSL)</summary>
 
-### docker
-Instructions for installing docker on different systems can be found here: https://docs.docker.com/desktop/
+### Docker
+Install [Docker Desktop](https://docs.docker.com/desktop/) on macOS or Windows. On Linux, you can also install [Docker Engine](https://docs.docker.com/engine/install/). Start Docker before running the commands below. On Windows, use a WSL shell with Docker Desktop's WSL integration enabled; the commands here are not written for PowerShell.
 
-(Note that Linux users can install the lighter-weight docker engine here: https://docs.docker.com/engine/install/, but they can also just use singularity...)
+Docker downloads the image automatically the first time you run it. You can also download it ahead of time:
 
-The first time you try and use the docker container, it will pull it down from dockerhub and then cache it locally. You can check what has been cached with:
+```bash
+docker pull wilkinsonnu/nuisancemc:tutorial
 ```
-sudo docker images
-```
-And you can delete all local docker images once you're finished with this tutorial using:
-```
-sudo docker system prune -f --all
-```
-docker files will hang out in unexpected places indefinitely if you don't. I assume if you don't want to remove all docker images, you're familiar enough with docker to do that.
 
-The design usage for docker is a little different to singularity. Most obviously, everything is run as root. But the intended use case is to have persistent images which you enter and then modify the contents of independent of the host system, with explicit copies between container and host whenever you need to transfer something. The usage examples here entirely break that model, and are definitely not a general "how to" for docker.
+From the `nuisance_tutorials` directory, run a program with:
 
-The equivalent docker command to
+```bash
+docker run --rm -v $(pwd):/output -w /output \
+    wilkinsonnu/nuisancemc:tutorial <program> <arguments>
 ```
-singularity exec <my_container.sif> do_something.exe /path/to/input <arguments>
-```
-is
-```
-sudo docker run --rm -v $(pwd):/output -w /output <container> do_something.exe /path/to/input <arguments>
-```
-with some caveats.
-
 The above arguments the the above command do the following:
 * `--rm` stop the container after the command has executed
 * `-v $(pwd):/output` mount the current working directory to `/output` within the container
 * `-w /output` execute the command in `/output` within the container
 An important caveat is that you don't have access to anywhere on the host machine that isn't the current working directory (but you can add other mountpoints etc if desired).
 
-Another caveat is that docker does not set up X11 forwarding from the container to the host, so opening GUI's from the container will report issues. This is solveable, but is system dependent, so I won't offer a general solution here. You can install a version of ROOT locally, for which you can instructions here: https://root.cern/install/, or ask Dr. Claude how to sort out X11 forwarding on your system.
+Or open a shell:
 
-The rest of the tutorial will use singularity for the examples. If you're using docker, you can replace any instance of:
+```bash
+docker run --rm -v $(pwd):/output -w /output \
+    wilkinsonnu/nuisancemc:tutorial bash
 ```
-singularity exec nuisance_nustec2026.sif <...>
-```
-with
-```
-sudo docker run --rm -v $(pwd):/output -w /output wilkinsonnu/nuisancemc:tutorial <...>
-```
-When examples suggest opening files with ROOT and browsing with ROOT's GUI `TBrowser`, you will need to use your local copy of ROOT instead... or be very confident that you know how to sort out X11 forwarding between the container and your host machine.
+Type `exit` to leave the shell. When running these commands, your current working directory will be available in the container. **Changes to files in your current work directory persist on your computer**, even though `--rm` removes the temporary container when it exits. Files elsewhere on your computer are not available unless you mount them separately.
 
+**macOS notes:**
+
+- Docker runs Linux containers in a virtual machine. You can still edit and inspect files produced in your mounted tutorial directory using ordinary macOS applications.
+- On an Apple Silicon Mac, if Docker reports that no image is available for `linux/arm64`, try adding `--platform linux/amd64` to `docker pull` and before the image name in each `docker run` command. Emulation can be slower than running a native image.
+- If Docker Desktop cannot mount the tutorial directory, check its file-sharing permissions. Keeping the repository somewhere under your home directory is usually simplest.
+
+**ROOT graphics:** Docker does not automatically connect graphical applications in the container to your desktop. Container commands that do not need a graphical window can still run, but exercises that open ROOT's `TBrowser` need extra display configuration or a [local ROOT installation](https://root.cern/install/). In particular, do not expect a containerised `TBrowser` window to appear automatically on macOS.
+
+To see downloaded images, use `docker images`. If you want to remove *this tutorial image* later, use:
+
+```bash
+docker image rm wilkinsonnu/nuisancemc:tutorial
+```
+(Note that docker files will hang out indefinitely if you don't clean them up)
+
+
+When a later example says:
+
+```bash
+apptainer exec nuisance_nustec2026.sif <program> <arguments>
+```
+
+use the following equivalent if you chose Docker:
+
+```bash
+docker run --rm -v $(pwd):/output -w /output \
+    wilkinsonnu/nuisancemc:tutorial <program> <arguments>
+```
 </details>
 
 ## Running the event generation packages
@@ -125,7 +152,7 @@ A collection of experimental fluxes is available in the NUISANCE data directory,
 
 You can inspect this file with ROOT if you would like with:
 ```
-singularity exec nuisance_nustec2026.sif root -l MC_inputs/minerva_le_flux.root
+apptainer exec nuisance_nustec2026.sif root -l MC_inputs/minerva_le_flux.root
 ```
 or if you're using a local version of root.
 ```
@@ -199,7 +226,7 @@ In this project, we will focus on neutrino interactions, for which the simplest 
 
 An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `generation_GENIEv3_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
 ```
-singularity exec nuisance_nustec2026.sif /bin/bash generation_GENIEv3_example.sh
+apptainer exec nuisance_nustec2026.sif /bin/bash generation_GENIEv3_example.sh
 ```
 There will be a few output files produced:
 * `GENIEv3_AR23_MINERvA_LE_FHC_numu.root`, the gevgen output in GENIE's GHEP format, requires the correct libraries to read
@@ -211,11 +238,11 @@ If you look at the script, you will see that the `NU_PDG` and `TARG` variables a
 
 Also, there is a `--cross-section` argument to `gevgen`, which takes a mysterious file in `MC_inputs`. This file includes pre-calculated "splines" as a function of true neutrino energy, broken down into all of the processes that have been included in the GENIE model, for a variety of targets and neutrino flavors. You can use a GENIE utility `gspl2root` to extract these splines into ROOT TGraphs, for easy plotting or inspection. An example command is:
 ```
-singularity exec nuisance_nustec2026.sif gspl2root -f MC_inputs/AR23_20i_00_000_splines.xml.gz -p 14,-14 -t 1000060120 -e 10 --tune AR23_20i_00_000 -o AR23_20i_00_000_splines.root
+apptainer exec nuisance_nustec2026.sif gspl2root -f MC_inputs/AR23_20i_00_000_splines.xml.gz -p 14,-14 -t 1000060120 -e 10 --tune AR23_20i_00_000 -o AR23_20i_00_000_splines.root
 ```
 which can be explored with:
 ```
-singularity exec nuisance_nustec2026.sif root -l AR23_20i_00_000_splines.root
+apptainer exec nuisance_nustec2026.sif root -l AR23_20i_00_000_splines.root
 ```
 For full details on `gspl2root`, and how to make new splines (using `gmkspl`), refer to the [GENIE documentation](https://arxiv.org/abs/1510.05494) and the [GENIE website](https://genie-mc.github.io/index.html).
 
@@ -240,7 +267,7 @@ For full information on the physics content of the tunes, refer to https://genie
 
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
 ```
-singularity exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
+apptainer exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
 ```
 Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
 * `NUWROv25.11.1_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
@@ -257,8 +284,8 @@ Although the NuWro input file contains a lot of options, the important ones for 
 
 To explore the targets available, and the settings, you can look at the nuwro source code, for example:
 ```
-singularity exec  nuisance_nustec2026.sif ls -l /opt/generators/nuwro/data/target
-singularity exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/CH.txt
+apptainer exec  nuisance_nustec2026.sif ls -l /opt/generators/nuwro/data/target
+apptainer exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/CH.txt
 ```
 
 </details>
@@ -272,7 +299,7 @@ singularity exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/
 
 NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
 ```
-singularity exec nuisance_nustec2026.sif /bin/bash generation_NEUT_example.sh
+apptainer exec nuisance_nustec2026.sif /bin/bash generation_NEUT_example.sh
 ```
 Note that the arguments are positional and NEUT doesn't take flags. The output of NEUT is automatically ready for NUISANCE, so no additional `Prepare` step is required.
 
@@ -304,7 +331,7 @@ Important parameters you will need to control in the NEUT card files:
 
 An example generation script is provided, which generates $\nu_{\mu}$ interactions on both carbon and hydrogen separately, for the MINERvA low energy neutrino-enhanced flux. The output files are then combined into a single file with NUISANCE in the last step. It should take ~10 minutes to run.
 ```
-singularity exec nuisance_nustec2026.sif /bin/bash generation_GiBUU_example.sh
+apptainer exec nuisance_nustec2026.sif /bin/bash generation_GiBUU_example.sh
 ```
 Several other differences are probably apparent. Unlike the other generators, GiBUU does not accept an argument specifying the number of particles to generate. Additionally, if you look at the output NUISANCE flat tree, the `InputWeights`, which are pass-through from the generator, are not 1. These are related. GiBUU does not carry out the usual accept-reject methods that the other generators use. Instead, to over-simplify, it tries to generate a certain number of events which are the `num_ensembles*A`, and for each process that occurs whilst simulating that full event, including the particle transport through the nucleus, it picks up a factor, the product of which translate to an overall event probability. Events which are blocked are simply dropped, leading to a non-fixed number of interactions for any job card.
 
@@ -338,7 +365,7 @@ There are a number of NUISANCE utilities for different purposes, but most of wha
 
 A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_example.sh`, which can be run with:
 ```
-singularity exec nuisance_nustec2026.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
 ```
 In this example, data and the GENIEv3 files generated above are compared for four MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
 
@@ -390,13 +417,13 @@ This controls the outputs that are saved by NUISANCE, but this is more than enou
 
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
-singularity exec nuisance_nustec2026.sif root -l <file_name.root>
+apptainer exec nuisance_nustec2026.sif root -l <file_name.root>
 ```
 And then explore the file with the ROOT TBrowser GUI with:
 ```
 TBrowser b
 ```
-**Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for singularity, but possibly not for docker where X11 forwarding is... less seamless**
+**Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for apptainer, but possibly not for docker where X11 forwarding is... less seamless**
 
 Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
 
@@ -415,11 +442,11 @@ Inside the file you'll find a number of ROOT objects:
 
 There are two example scripts for producing a simple plot comparing data and simulation for the 1D datasets produced using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
 ```
-singularity exec  nuisance_nustec2026.sif python3 nominal_plotter.py
+apptainer exec  nuisance_nustec2026.sif python3 nominal_plotter.py
 ```
 Or:
 ```
-singularity exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
+apptainer exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
 ```
 The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
@@ -474,17 +501,17 @@ Finally, one can also change the meaning of the dial value change to be as a fra
 
 To see the utility of this reweighting in action, there are two example card files, with a positive and negative 1$\sigma$ shift to `MaCCRES` which can generate output with the commands:
 ```
-singularity exec nuisance_nustec2026.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
-singularity exec nuisance_nustec2026.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
 ```
 
 And then the scripts `dial_validation_plotter.C` or `dial_validation_plotter.py` both make validation plots showing the impact of those shifts on the predictions for the MINERvA samples of interest. Run these with either:
 ```
-singularity exec  nuisance_nustec2026.sif python3 dial_validation_plotter.py
+apptainer exec  nuisance_nustec2026.sif python3 dial_validation_plotter.py
 ```
 Or:
 ```
-singularity exec  nuisance_nustec2026.sif root -q -l -b dial_validation_plotter.C
+apptainer exec  nuisance_nustec2026.sif root -q -l -b dial_validation_plotter.C
 ```
 The output image in both cases is a png image showing how the $\pm$1$\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
@@ -513,7 +540,7 @@ Again, you can add any number of parameters and samples to the fit, but the more
 
 To run a fit with a desired card file, using the `nuismin` program, instead of the usual `nuiscomp` used so far. An example card file for running a simple fit with a single free GENIE parameter `MaCCRES`, and a single MINERvA data sample, is given in `fit_GENIEv3_example.card`, which can be processed with:
 ```
-singularity exec nuisance_nustec2026.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
+apptainer exec nuisance_nustec2026.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
 ```
 
 The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions/modifications:
