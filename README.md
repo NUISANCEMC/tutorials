@@ -28,70 +28,58 @@ You _do_ need a container runtime environment to run the container, either on yo
 Follow your institution’s instructions if Apptainer is already provided, or see the [Apptainer user guide](https://apptainer.org/docs/user/latest/).
 
 From the `nuisance_tutorials` directory, download the container image from dockerhub and save it as a local `.sif` file:
-
-```bash
+```
 apptainer pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
 
 To run a program from the image:
-
-```bash
+```
 apptainer exec nuisance_nustec2026.sif <program> <arguments>
 ```
 Here, your current tutorial directory is available **inside** the container, and the program (from the container) starts there. It writes files relative to the tutorial directory on the host. Files elsewhere on your computer may need an additional bind mount before a program in the container can access them.
 
 To explore the container interactively:
-
-```bash
+```
 apptainer shell nuisance_nustec2026.sif
 ```
-
 Type `exit` to leave the shell. The image itself is read-only, but **your mounted tutorial files are not**: commands in the container can change or delete them.
-
 </details>
 
 
 <details>
-
 <summary>SingularityCE (Linux and some computing clusters)</summary>
 
 ### SingularityCE
 If your system provides a `singularity` command rather than `apptainer`, you can use the same Docker Hub image. See the [SingularityCE user guide](https://docs.sylabs.io/guides/latest/user-guide/) if you need installation or background information.
 
 From the `nuisance_tutorials` directory:
-
-```bash
+```
 singularity pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
 
 Run a program, or open an interactive shell, with:
-
-```bash
+```
 singularity exec nuisance_nustec2026.sif <program> <arguments>
-
 singularity shell nuisance_nustec2026.sif
 ```
 
 For the examples later in the tutorial, you can replace `apptainer` with `singularity`. As with Apptainer, the image is read-only but files in the mounted tutorial directory can be changed. Type `exit` to leave an interactive shell.
-
 </details>
 
-<details>
 
+<details>
 <summary>Docker (macOS, Linux, or Windows with WSL)</summary>
 
 ### Docker
 Install [Docker Desktop](https://docs.docker.com/desktop/) on macOS or Windows. On Linux, you can also install [Docker Engine](https://docs.docker.com/engine/install/). Start Docker before running the commands below. On Windows, use a WSL shell with Docker Desktop's WSL integration enabled; the commands here are not written for PowerShell.
 
 Docker downloads the image automatically the first time you run it. You can also download it ahead of time:
-
-```bash
+```
 docker pull wilkinsonnu/nuisancemc:tutorial
 ```
 
 From the `nuisance_tutorials` directory, run a program with:
-
-```bash
+```
 docker run --rm -v $(pwd):/output -w /output \
     wilkinsonnu/nuisancemc:tutorial <program> <arguments>
 ```
@@ -102,52 +90,47 @@ The above arguments the the above command do the following:
 An important caveat is that you don't have access to anywhere on the host machine that isn't the current working directory (but you can add other mountpoints etc if desired).
 
 Or open a shell:
-
-```bash
+```
 docker run --rm -v $(pwd):/output -w /output \
     wilkinsonnu/nuisancemc:tutorial bash
 ```
 Type `exit` to leave the shell. When running these commands, your current working directory will be available in the container. **Changes to files in your current work directory persist on your computer**, even though `--rm` removes the temporary container when it exits. Files elsewhere on your computer are not available unless you mount them separately.
 
 **macOS notes:**
-
 - Docker runs Linux containers in a virtual machine. You can still edit and inspect files produced in your mounted tutorial directory using ordinary macOS applications.
 - On an Apple Silicon Mac, if Docker reports that no image is available for `linux/arm64`, try adding `--platform linux/amd64` to `docker pull` and before the image name in each `docker run` command. Emulation can be slower than running a native image.
 - If Docker Desktop cannot mount the tutorial directory, check its file-sharing permissions. Keeping the repository somewhere under your home directory is usually simplest.
 
-**ROOT graphics:** Docker does not automatically connect graphical applications in the container to your desktop. Container commands that do not need a graphical window can still run, but exercises that open ROOT's `TBrowser` need extra display configuration or a [local ROOT installation](https://root.cern/install/). In particular, do not expect a containerised `TBrowser` window to appear automatically on macOS.
+**ROOT graphics:** 
+Docker does not automatically connect graphical applications in the container to your desktop. Container commands that do not need a graphical window can still run, but exercises that open ROOT's `TBrowser` need extra display configuration or a [local ROOT installation](https://root.cern/install/). In particular, do not expect a containerised `TBrowser` window to appear automatically on macOS.
 
 To see downloaded images, use `docker images`. If you want to remove *this tutorial image* later, use:
-
-```bash
+```
 docker image rm wilkinsonnu/nuisancemc:tutorial
 ```
 (Note that docker files will hang out indefinitely if you don't clean them up)
 
-
 When a later example says:
-
-```bash
+```
 apptainer exec nuisance_nustec2026.sif <program> <arguments>
 ```
-
 use the following equivalent if you chose Docker:
-
-```bash
+```
 docker run --rm -v $(pwd):/output -w /output \
     wilkinsonnu/nuisancemc:tutorial <program> <arguments>
 ```
 </details>
 
-## Running the event generation packages
-<details>
 
-<summary>Running the event generation packages</summary>
+## Running the event generation packages
 
 Neutrino event generators provide executables for making neutrino events with simple starting conditions, which are sufficient for comparisons to cross-section data. More complicated applications with a full neutrino flux simulation and a realistic detector geometry require dedicated applications, but the experiments that produce data devote a lot of time and effort to account for or simply express, the effect of these, and produce cross-section data which generally does not require specific knowledge of their experiments other than the simplified flux distributions and the target material of interest.
 
-Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event enerator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
+Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event generator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
 
+<details>
+<summary>Experimental fluxes</summary>
+### Experimental fluxes
 A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/generators/NUISANCE/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA "low energy" flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/generators/NUISANCE/data/flux/minerva_le_flux.root`. There's also a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
 
 You can inspect this file with ROOT if you would like with:
