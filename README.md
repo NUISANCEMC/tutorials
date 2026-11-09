@@ -138,14 +138,11 @@ Neutrino event generators provide executables for making neutrino events with si
 Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event generator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
 
 <details>
-<<<<<<< HEAD
 
 <summary>Experimental fluxes</summary>
 
 ### Experimental fluxes
-=======
 <summary><h3>Experimental fluxes</h3></summary>
->>>>>>> 1fe9b1835dbce8d843651570e20d3d953fb5af6b
 A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/generators/NUISANCE/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA "low energy" flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/generators/NUISANCE/data/flux/minerva_le_flux.root`. There's also a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
 
 You can inspect this file with ROOT if you would like with:
@@ -260,13 +257,8 @@ For full information on the physics content of the tunes, refer to https://genie
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
 <details>
-<<<<<<< HEAD
 
-<summary>NuWro event generation </summary>
-
-=======
 <summary><h4>NuWro event generation</h4></summary>
->>>>>>> 1fe9b1835dbce8d843651570e20d3d953fb5af6b
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
 ```
 apptainer exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
@@ -326,12 +318,8 @@ Important parameters you will need to control in the NEUT card files:
 [GiBUU](https://gibuu.hepforge.org/trac/wiki) is a multi-purpose, theory-focused, event generator which can simulate neutrino-, electron-, photon- and hadron-nucleus interactions, as well as heavy ion collisions, written in Fortran. The stand-out feature of GiBUU for neutrino-interaction studies is a consistent and sophisticated treatment of the nucleus, most notably in final-state interactions, in which the evolution of all particles is calculated in discrete time steps, with every particle feeling the potential of each other, as well as the excited nuclear remnant. However, as with all generators, a few sentence summary will not do it justice, and details can be found in [recent GiBUU tutorials](https://gibuu.hepforge.org/trac/wiki/tutorial19).
 
 <details>
-<<<<<<< HEAD
 
-<summary>GiBUU event generation</summary>
-=======
   <summary><h4>GiBUU event generation</h4></summary>
->>>>>>> 1fe9b1835dbce8d843651570e20d3d953fb5af6b
   
 GiBUU is fast and easy to run, but differs from other event generators in a number of ways. Like NEUT and NuWro, it uses an input (job) file which has a wealth of available options. An arbitrary flux can be specified, however, each job is only capable of producing interactions between a single incident neutrino flavour and nuclear target, and is limited to either charged- or neutral-current interactions. Multiple jobs have to be combined to overcome this, which introduces a little bit of extra bookkeeping.
 
