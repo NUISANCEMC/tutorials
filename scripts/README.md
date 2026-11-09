@@ -165,7 +165,7 @@ That's as far as the flat-trees can take you. If you want more advanced features
 * Fitting generator parameters (e.g. M_A^{QE}) to external data
 * Studies of the impact of systematic parameters on generator predictions
 
-you will need to interface with the generators' reweighting engines and use generator output through NUISANCE, as described in the main [README.md](../README.md).
+you will need to interface with the generators' reweighting engines and use generator output through NUISANCE, as described in the main [README.md](../README.md#analyzing-the-nuisance-output).
 
 
 
