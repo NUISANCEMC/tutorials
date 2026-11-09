@@ -22,15 +22,20 @@ For these tutorials, we have a docker *container* which is hosted on dockerhub a
 You _do_ need a container runtime environment to run the container, either on your laptop or a system you have access to. Docker, Apptainer, and SingularityCE can all run this image, and you only need one of those runtimes. Apptainer and SingularityCE are common on shared Linux computing systems. Docker Desktop is usually the more straightforward choice on macOS. If you are using a University cluster or HPC, check which runtime it provides before trying to install one yourself. There may be a home-grown container runtime (e.g., shifter at NERSC), which should also be fine, although specific instructions are not provided.
 
 <details>
-<summary>Apptainer (Linux and many computing clusters)</summary>
+<summary><h3>Apptainer (Linux and many computing clusters)</h3></summary>
 
-### Apptainer
 Follow your institution’s instructions if Apptainer is already provided, or see the [Apptainer user guide](https://apptainer.org/docs/user/latest/).
 
-From the `nuisance_tutorials` directory, download the container image from dockerhub and save it as a local `.sif` file:
+From the `nuisance_tutorials` directory, download the container image from dockerhub and save it as a local, 1.2 GB, `.sif` file:
 ```
 apptainer pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
+Note that in addition to the .sif file, this will add ~1.5 GB to the apptainer cache, which is not necessary after building the file. You can inspect the cache and clear it with:
+```
+apptainer cache list
+apptainer cache clear
+```
+**Note that you can run apptainer on a Fermilab GPVM, but the typical disk quotas may be challenging to fit both the .sif file and the cache in...**
 
 To run a program from the image:
 ```
@@ -47,14 +52,18 @@ Type `exit` to leave the shell. The image itself is read-only, but **your mounte
 
 
 <details>
-<summary>SingularityCE (Linux and some computing clusters)</summary>
+<summary><h3>SingularityCE (Linux and some computing clusters)</h3></summary>
 
-### SingularityCE
 If your system provides a `singularity` command rather than `apptainer`, you can use the same Docker Hub image. See the [SingularityCE user guide](https://docs.sylabs.io/guides/latest/user-guide/) if you need installation or background information.
 
 From the `nuisance_tutorials` directory:
 ```
 singularity pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
+```
+Note that, as for apptainer, in addition to the 1.2GB .sif file, this will add ~1.5 GB to the singularity cache, which is not necessary after building the file. You can inspect the cache and clear it with:
+```
+singularity cache list
+singularity cache clear
 ```
 
 Run a program, or open an interactive shell, with:
@@ -68,7 +77,7 @@ For the examples later in the tutorial, you can replace `apptainer` with `singul
 
 
 <details>
-<summary>Docker (macOS, Linux, or Windows with WSL)</summary>
+<summary><h3>Docker (macOS, Linux, or Windows with WSL)</h3></summary>
 
 ### Docker
 Install [Docker Desktop](https://docs.docker.com/desktop/) on macOS or Windows. On Linux, you can also install [Docker Engine](https://docs.docker.com/engine/install/). Start Docker before running the commands below. On Windows, use a WSL shell with Docker Desktop's WSL integration enabled; the commands here are not written for PowerShell.
@@ -129,10 +138,14 @@ Neutrino event generators provide executables for making neutrino events with si
 Although some generators provide support for complex detector geometries, these are typically described using another detector simulation package, called GEANT4 (https://geant4.web.cern.ch/), which is widely used in the wider field of Particle Physics. It's also interesting to note that once an event has been simulated, and the products of a neutrino interaction have been produced by the neutrino event generator, those interaction products are handed to GEANT4 to propagate through the detector geometry and deal with all the ways non-neutrinos interact with matter. The job of the neutrino event generator is pretty specialized.
 
 <details>
+<<<<<<< HEAD
 
 <summary>Experimental fluxes</summary>
 
 ### Experimental fluxes
+=======
+<summary><h3>Experimental fluxes</h3></summary>
+>>>>>>> 1fe9b1835dbce8d843651570e20d3d953fb5af6b
 A collection of experimental fluxes is available in the NUISANCE data directory, which can be found in the containers here: `/opt/generators/NUISANCE/data/flux/`, and a (relatively) thorough description of where those fluxes come is documented here: https://nuisance.hepforge.org/trac/wiki/ExperimentFlux. For the examples in this tutorial, we'll use the muon-neutrino component of the MINERvA "low energy" flux in neutrino-enhanced mode by default, which is the `numu_fhc` histogram in the file `/opt/generators/NUISANCE/data/flux/minerva_le_flux.root`. There's also a copy in `MC_inputs` which makes it easier for anybody using local versions of ROOT.
 
 You can inspect this file with ROOT if you would like with:
@@ -205,9 +218,9 @@ wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/
 
 <details>
   
-<summary>GENIE event generation</summary>
+<summary><h4>GENIE event generation</h4></summary>
 
-In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented here: https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf
+In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented [here](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf) or (if the recent PHP issues mean the latter is still behind a firewall) [here](https://arxiv.org/abs/1510.05494).
 
 An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `generation_GENIEv3_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
 ```
@@ -247,9 +260,13 @@ For full information on the physics content of the tunes, refer to https://genie
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
 <details>
+<<<<<<< HEAD
 
 <summary>NuWro event generation </summary>
 
+=======
+<summary><h4>NuWro event generation</h4></summary>
+>>>>>>> 1fe9b1835dbce8d843651570e20d3d953fb5af6b
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
 ```
 apptainer exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
@@ -280,7 +297,7 @@ apptainer exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/CH
 
 <details>
   
-<summary>NEUT event generation</summary>
+<summary><h4>NEUT event generation</h4></summary>
 
 NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
 ```
@@ -309,8 +326,12 @@ Important parameters you will need to control in the NEUT card files:
 [GiBUU](https://gibuu.hepforge.org/trac/wiki) is a multi-purpose, theory-focused, event generator which can simulate neutrino-, electron-, photon- and hadron-nucleus interactions, as well as heavy ion collisions, written in Fortran. The stand-out feature of GiBUU for neutrino-interaction studies is a consistent and sophisticated treatment of the nucleus, most notably in final-state interactions, in which the evolution of all particles is calculated in discrete time steps, with every particle feeling the potential of each other, as well as the excited nuclear remnant. However, as with all generators, a few sentence summary will not do it justice, and details can be found in [recent GiBUU tutorials](https://gibuu.hepforge.org/trac/wiki/tutorial19).
 
 <details>
+<<<<<<< HEAD
 
 <summary>GiBUU event generation</summary>
+=======
+  <summary><h4>GiBUU event generation</h4></summary>
+>>>>>>> 1fe9b1835dbce8d843651570e20d3d953fb5af6b
   
 GiBUU is fast and easy to run, but differs from other event generators in a number of ways. Like NEUT and NuWro, it uses an input (job) file which has a wealth of available options. An arbitrary flux can be specified, however, each job is only capable of producing interactions between a single incident neutrino flavour and nuclear target, and is limited to either charged- or neutral-current interactions. Multiple jobs have to be combined to overcome this, which introduces a little bit of extra bookkeeping.
 
@@ -345,11 +366,9 @@ Finally, NUISANCE also provides an interface to parameter fitting methods so tha
 ### Using the NUISANCE flat trees
 [See the separate readme in the scripts directory](scripts/README.md)
 
-### Making simple data-MC comparisons
-
 <details>
 
-<summary>Making simple data-MC comparisons</summary>
+<summary><h3>Making simple data-MC comparisons</h3></summary>
 
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
@@ -400,11 +419,9 @@ This controls the outputs that are saved by NUISANCE, but this is more than enou
 
 </details>
 
-### Analyzing the NUISANCE output
-
 <details>
-
-<summary>Analyzing the NUISANCE output</summary>
+ 
+<summary><h3>Analyzing the NUISANCE output</h3></summary>
 
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
@@ -445,11 +462,9 @@ It is also possible to make a similar plot with the linearized 2D data and predi
 
 </details>
 
-### Event reweighting
-
 <details>
 
-<summary>Event reweighting</summary>
+<summary><h3>Event reweighting</h3></summary>
 
 All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
 
@@ -461,11 +476,9 @@ Although commonly used, a fundamental limitation of reweighting is that regions 
 
 </details>
 
-### Varying parameters
-
 <details>
 
-<summary>Varying parameters</summary>
+<summary><h3>Varying parameters</h3></summary>
 
 NUISANCE can link to various reweighting packages in order to calculate reweighting factors event by event for a given set of parameter variations. These reweighting packages could be from the event generators themselves, or additional reweighting packages such as those produced by many experiments. It is also possible to implement simple reweighting parameters in NUISANCE, although historically this has mostly been done for rapid development of a dial destined for another package. Again, NUISANCE is not (or at least rarely) doing the heavy lifting, it is a high-level tool that builds on top of the existing event generators!
 
@@ -509,11 +522,9 @@ The output image in both cases is a png image showing how the $\pm$1$\sigma$ shi
 Any number of parameters can be set, as long as they can be applied to the samples included in the card file. For example, you might want to include reweightale parameters from GENIE, and also include reweighting parameters in experiment-specific reweighting packages which are designed to work with GENIE. Each dial will calculate a weight for some or all events --- when multiple dials are included, the weight that will be stored for each event (and used to fill the summary histograms we're looking at in the example), will be the product of the weights from each dial.
 </details>
 
-### Fitting parameters
-
 <details>
 
-<summary>Fitting parameters</summary>
+<summary><h3>Fitting parameters</h3></summary>
 
 NUISANCE is also able to vary specified parameters and find the values of those parameters that minimizes the $\chi^{2}$ test-statistic with respect to a desired set of samples. It will also calculate the postfit covariance matrix, and produce the best fit histograms, as well as storing a lot of information about the fit. The fitting itself is carried out by MINUIT by default. Again, NUISANCE isn't re-inventing the wheel!
 
