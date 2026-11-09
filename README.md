@@ -27,10 +27,16 @@ You _do_ need a container runtime environment to run the container, either on yo
 ### Apptainer
 Follow your institution’s instructions if Apptainer is already provided, or see the [Apptainer user guide](https://apptainer.org/docs/user/latest/).
 
-From the `nuisance_tutorials` directory, download the container image from dockerhub and save it as a local `.sif` file:
+From the `nuisance_tutorials` directory, download the container image from dockerhub and save it as a local, 1.2 GB, `.sif` file:
 ```
 apptainer pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
+Note that in addition to the .sif file, this will add ~1.5 GB to the apptainer cache, which is not necessary after building the file. You can inspect the cache and clear it with:
+```
+apptainer cache list
+apptainer cache clear
+```
+**Note that you can run apptainer on a Fermilab GPVM, but the typical disk quotas may be challenging to fit both the .sif file and the cache in...**
 
 To run a program from the image:
 ```
@@ -56,6 +62,10 @@ From the `nuisance_tutorials` directory:
 ```
 singularity pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
+Note that, as for apptainer, in addition to the 1.2GB .sif file, this will add ~1.5 GB to the singularity cache, which is not necessary after building the file. You can inspect the cache and clear it with:
+```
+singularity cache list
+singularity cache clear
 
 Run a program, or open an interactive shell, with:
 ```
@@ -205,7 +215,7 @@ wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/
   
 <summary>GENIE event generation</summary>
 
-In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented here: https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf
+In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented [here](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf) or (if the recent PHP issues mean the latter is still behind a firewall) [here](https://arxiv.org/abs/1510.05494).
 
 An example script to generate 100k muon neutrino-hydrocarbon interactions using the MINERvA LE flux is given in `generation_GENIEv3_example.sh` using the `AR23_20i_00_000` model, which has been developed by DUNE and is now being utilized by multiple experiments. Run it with a command like (which should take 5-10 minutes):
 ```
