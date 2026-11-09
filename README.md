@@ -22,9 +22,8 @@ For these tutorials, we have a docker *container* which is hosted on dockerhub a
 You _do_ need a container runtime environment to run the container, either on your laptop or a system you have access to. Docker, Apptainer, and SingularityCE can all run this image, and you only need one of those runtimes. Apptainer and SingularityCE are common on shared Linux computing systems. Docker Desktop is usually the more straightforward choice on macOS. If you are using a University cluster or HPC, check which runtime it provides before trying to install one yourself. There may be a home-grown container runtime (e.g., shifter at NERSC), which should also be fine, although specific instructions are not provided.
 
 <details>
-<summary>Apptainer (Linux and many computing clusters)</summary>
+<summary><h3>Apptainer (Linux and many computing clusters)</h3></summary>
 
-### Apptainer
 Follow your institution’s instructions if Apptainer is already provided, or see the [Apptainer user guide](https://apptainer.org/docs/user/latest/).
 
 From the `nuisance_tutorials` directory, download the container image from dockerhub and save it as a local, 1.2 GB, `.sif` file:
@@ -53,9 +52,8 @@ Type `exit` to leave the shell. The image itself is read-only, but **your mounte
 
 
 <details>
-<summary>SingularityCE (Linux and some computing clusters)</summary>
+<summary><h3>SingularityCE (Linux and some computing clusters)</h3></summary>
 
-### SingularityCE
 If your system provides a `singularity` command rather than `apptainer`, you can use the same Docker Hub image. See the [SingularityCE user guide](https://docs.sylabs.io/guides/latest/user-guide/) if you need installation or background information.
 
 From the `nuisance_tutorials` directory:
@@ -79,7 +77,7 @@ For the examples later in the tutorial, you can replace `apptainer` with `singul
 
 
 <details>
-<summary>Docker (macOS, Linux, or Windows with WSL)</summary>
+<summary><h3>Docker (macOS, Linux, or Windows with WSL)</h3></summary>
 
 ### Docker
 Install [Docker Desktop](https://docs.docker.com/desktop/) on macOS or Windows. On Linux, you can also install [Docker Engine](https://docs.docker.com/engine/install/). Start Docker before running the commands below. On Windows, use a WSL shell with Docker Desktop's WSL integration enabled; the commands here are not written for PowerShell.
