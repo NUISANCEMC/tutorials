@@ -119,7 +119,7 @@ def main(fname, nbins=100):
     leg.Draw("SAME")
 
     c.RedrawAxis()
-    c.SaveAs("gibuu_weights.pdf")
+    c.SaveAs("plots/gibuu_weights.pdf")
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
