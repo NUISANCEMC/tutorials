@@ -350,12 +350,8 @@ Finally, NUISANCE also provides an interface to parameter fitting methods so tha
 ### Using the NUISANCE flat trees
 [See the separate readme in the scripts directory](scripts/README.md)
 
-### Making simple data-MC comparisons
-
 <details>
-
-<summary>Making simple data-MC comparisons</summary>
-
+<summary><h3>Making simple data-MC comparisons</h3></summary>
 
 There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
@@ -405,11 +401,8 @@ If run without this line, *for these measurement* NUISANCE will refuse to run be
 This controls the outputs that are saved by NUISANCE, but this is more than enough for our purposes here.
 </details>
 
-### Analyzing the NUISANCE output
-
 <details>
-
-<summary>Analyzing the NUISANCE output</summary>
+<summary><h3>Analyzing the NUISANCE output</h3></summary>
 
 The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
 ```
@@ -450,11 +443,8 @@ It is also possible to make a similar plot with the linearized 2D data and predi
 
 </details>
 
-### Event reweighting
-
 <details>
-
-<summary>Event reweighting</summary>
+<summary><h3>Event reweighting</h3></summary>
 
 All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
 
@@ -466,11 +456,8 @@ Although commonly used, a fundamental limitation of reweighting is that regions 
 
 </details>
 
-### Varying parameters
-
 <details>
-
-<summary>Varying parameters</summary>
+<summary><h3>Varying parameters</h3></summary>
 
 NUISANCE can link to various reweighting packages in order to calculate reweighting factors event by event for a given set of parameter variations. These reweighting packages could be from the event generators themselves, or additional reweighting packages such as those produced by many experiments. It is also possible to implement simple reweighting parameters in NUISANCE, although historically this has mostly been done for rapid development of a dial destined for another package. Again, NUISANCE is not (or at least rarely) doing the heavy lifting, it is a high-level tool that builds on top of the existing event generators!
 
@@ -514,11 +501,8 @@ The output image in both cases is a png image showing how the $\pm$1$\sigma$ shi
 Any number of parameters can be set, as long as they can be applied to the samples included in the card file. For example, you might want to include reweightale parameters from GENIE, and also include reweighting parameters in experiment-specific reweighting packages which are designed to work with GENIE. Each dial will calculate a weight for some or all events --- when multiple dials are included, the weight that will be stored for each event (and used to fill the summary histograms we're looking at in the example), will be the product of the weights from each dial.
 </details>
 
-### Fitting parameters
-
 <details>
-
-<summary>Fitting parameters</summary>
+<summary><h3>Fitting parameters</h3></summary>
 
 NUISANCE is also able to vary specified parameters and find the values of those parameters that minimizes the $\chi^{2}$ test-statistic with respect to a desired set of samples. It will also calculate the postfit covariance matrix, and produce the best fit histograms, as well as storing a lot of information about the fit. The fitting itself is carried out by MINUIT by default. Again, NUISANCE isn't re-inventing the wheel!
 
