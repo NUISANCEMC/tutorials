@@ -213,7 +213,7 @@ wget -nH -np -r --cut-dirs 3 https://portal.nersc.gov/project/nuisance/tutorial/
 
 <details>
   
-<summary>GENIE event generation</summary>
+<summary><h4>GENIE event generation</h4></summary>
 
 In this project, we will focus on neutrino interactions, for which the simplest event generation tool in GENIE is `gevgen`, which is fully documented [here](https://genie-docdb.pp.rl.ac.uk/DocDB/0000/000002/006/man.pdf) or (if the recent PHP issues mean the latter is still behind a firewall) [here](https://arxiv.org/abs/1510.05494).
 
@@ -255,7 +255,7 @@ For full information on the physics content of the tunes, refer to https://genie
 [NuWro](https://nuwro.github.io/user-guide/) is a neutrino event generator which is developed to be flexible and include as many theory model options as possible, reflecting the main interests of the development group. As so many options are configurable, many more options need to be specified to generate events. Documentation is available on the NuWro website: https://nuwro.github.io/user-guide/getting-started/running/
 
 <details>
-<summary>NuWro event generation </summary>
+<summary><h4>NuWro event generation</h4></summary>
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
 ```
 apptainer exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
@@ -286,7 +286,7 @@ apptainer exec  nuisance_nustec2026.sif cat /opt/generators/nuwro/data/target/CH
 
 <details>
   
-<summary>NEUT event generation</summary>
+<summary><h4>NEUT event generation</h4></summary>
 
 NEUT is easy to run and uses a similar input card file to NuWro with all the relevant parameters included, which for this example can be found in `MC_inputs/MINERvA_LE_numu_NEUT.card`. Generate 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux with the following command (which should take 5-10 minutes):
 ```
@@ -315,7 +315,7 @@ Important parameters you will need to control in the NEUT card files:
 [GiBUU](https://gibuu.hepforge.org/trac/wiki) is a multi-purpose, theory-focused, event generator which can simulate neutrino-, electron-, photon- and hadron-nucleus interactions, as well as heavy ion collisions, written in Fortran. The stand-out feature of GiBUU for neutrino-interaction studies is a consistent and sophisticated treatment of the nucleus, most notably in final-state interactions, in which the evolution of all particles is calculated in discrete time steps, with every particle feeling the potential of each other, as well as the excited nuclear remnant. However, as with all generators, a few sentence summary will not do it justice, and details can be found in [recent GiBUU tutorials](https://gibuu.hepforge.org/trac/wiki/tutorial19).
 
 <details>
-  <summary>GiBUU event generation</summary>
+  <summary><h4>GiBUU event generation</h4></summary>
   
 GiBUU is fast and easy to run, but differs from other event generators in a number of ways. Like NEUT and NuWro, it uses an input (job) file which has a wealth of available options. An arbitrary flux can be specified, however, each job is only capable of producing interactions between a single incident neutrino flavour and nuclear target, and is limited to either charged- or neutral-current interactions. Multiple jobs have to be combined to overcome this, which introduces a little bit of extra bookkeeping.
 
