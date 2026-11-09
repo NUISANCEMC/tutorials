@@ -260,10 +260,13 @@ For full information on the physics content of the tunes, refer to https://genie
 <details>
 
 <summary><h4>NuWro event generation</h4></summary>
+
 An example script for producing 100k muon neutrino-hydrocarbon interactions for the MINERvA low energy neutrino-enhanced flux is given in `generation_NUWRO_example.sh`, which uses parameters set in `MC_inputs/MINERvA_LE_numu_NUWROv25.11.1.params`, and can be run with the following command (which should take ~1 minute):
+
 ```
 apptainer exec nuisance_nustec2026.sif /bin/bash generation_NUWRO_example.sh
 ```
+
 Nuwro produces a small number of files which are useful for debugging, but the two files we will use here are:
 * `NUWROv25.11.1_MINERvA_LE_FHC_numu.root`, this is the nuwro output, which needs correct libraries to *fully* read, although native ROOT can probably do okay because the structure is relatively simple
 * `NUWROv25.11.1_MINERvA_LE_FHC_numu_NUISFLAT.root`: the output from NUISANCE's `nuisflat` application, which makes a ROOT flat tree with a simplified format that doesn't require any libraries to be read.
