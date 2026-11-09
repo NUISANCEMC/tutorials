@@ -157,84 +157,15 @@ The output image in both cases is a png image for each sample we we asked for, e
 
 It is also possible to make a similar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
 
-### Event reweighting
-All of the generators discussed in this tutorial have variable parameters, which can be modified when running the simulation. However, once you generate some events, it will be obvious that this is a rather slow process, and if you want to explore the parameter space in a meaningful way, it would be very computationally expensive to re-generate a large number of events at each set of parameters of interest.
+### More advanced usage and features
 
-Event reweighting is a way to overcome this issue in a computationally efficient way. It is widely used, but has strong limitations. The procedure is relatively simple. If you have a set of events produced with some nominal parameter set, and want to approximate a set of events with some alternative parameter set, for each event, you calculate the probability for that event to have been produced with the nominal and alternative parameter set. Then, you take the ratio of the alternative probability divided by the nominal probability and obtain a "weight", reflecting how much more or less probable that event would be with the alternative, rather than nominal, parameter set. Then, the distribution of weighted events will look the same as the distribution of events had they been produced with the alternative parameter set.
+That's as far as the flat-trees can take you. If you want more advanced features, like
 
-Event reweighting packages are available inside NEUT and GENIE, and are actively developed additional. Additionally, experimental collaborations often implement additional uncertainties through custom reweighting packages which may or may not be open source. NUISANCE itself also has a mechanism for implementing new  (but simple) uncertainties.
+* General event reweighting
+* Fitting generator parameters (e.g. M_A^{QE}) to external data
+* Studies of the impact of systematic parameters on generator predictions
 
-Although commonly used, a fundamental limitation of reweighting is that regions of phase space which are not occupied in the initial model cannot be reweighted into existence.
+you will need to interface with the generators' reweighting engines and use generator output through NUISANCE, as described in the main [README.md](../README.md).
 
-### Varying parameters
-NUISANCE can link to various reweighting packages in order to calculate reweighting factors event by event for a given set of parameter variations. These reweighting packages could be from the event generators themselves, or additional reweighting packages such as those produced by many experiments. It is also possible to implement simple reweighting parameters in NUISANCE, although historically this has mostly been done for rapid development of a dial destined for another package. Again, NUISANCE is not (or at least rarely) doing the heavy lifting, it is a high-level tool that builds on top of the existing event generators!
 
-In this case, the parameter variations can be carried out by the generators, or NUISANCE, or another package which specifies how to reweight events, or all of the above.
 
-To include a parameter variation, a line can be added to the NUISANCE card file with a format like:
-```
-  <parameter name="MaCCRES" nominal="-0.5" type="genie_parameter"/>
-```
-where this changes the value of a "genie_parameter" (meaning [GENIEReWeight](https://github.com/GENIE-MC/Reweight)) called "MaCCRES" (the axial mass value for the CC-resonant axial form factor), to -0.5, where the meaning of -0.5 is interpreted by the reweighting package.
-
-In the case of GENIE, and most other reweighting packaged, the reweighted dial value can be calculated with $V = N \times (1 + R \times S)$ where $V$ is the new value, $N$ is the nominal value, $R$ is the reweighting factor (e.g. -0.5 in this example), and $S$ is the $\pm$1 $\sigma$ shift value. It can be challenging to look up $N$ and $S$, and generally requires generator specific knowledge.
-
-These may also change based on the model used to initially generate the events, which must be known at runtime. For the case of GENIE, this means telling NUISANCE what GENIE tune was used (which then tells GENIERW how to configure itself), by adding a line to the card file, for example:
-```
- <config GENIETune="AR23_20i_00_000" />
- ```
- You can look up these values in `$GENIE/config`. For example, you can find the $\pm$1 $\sigma$ shift values from `${GENIE}/config/GSystUncertaintyTable.xml`, and the nominal value from `$GENIE/config/AR23_20i/CommonParam.xml`, where only the latter is tune-specific.
-
-Finally, one can also change the meaning of the dial value change to be as a fraction of the initial value by adding the following line to the NUISANCE card file:
-```
-<config setabstwk="1" />
-```
-
-To see the utility of this reweighting in action, there are two example card files, with a positive and negative 1$\sigma$ shift to `MaCCRES` which can generate output with the commands:
-```
-apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
-apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
-```
-
-And then the scripts `dial_validation_plotter.C` or `dial_validation_plotter.py` both make validation plots showing the impact of those shifts on the predictions for the MINERvA samples of interest. Run these with either:
-```
-apptainer exec  nuisance_nustec2026.sif python3 dial_validation_plotter.py
-```
-Or:
-```
-apptainer exec  nuisance_nustec2026.sif root -q -l -b dial_validation_plotter.C
-```
-The output image in both cases is a png image showing how the $\pm$1$\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
-
-Any number of parameters can be set, as long as they can be applied to the samples included in the card file. For example, you might want to include reweightale parameters from GENIE, and also include reweighting parameters in experiment-specific reweighting packages which are designed to work with GENIE. Each dial will calculate a weight for some or all events --- when multiple dials are included, the weight that will be stored for each event (and used to fill the summary histograms we're looking at in the example), will be the product of the weights from each dial.
-
-### Fitting parameters
-NUISANCE is also able to vary specified parameters and find the values of those parameters that minimizes the chi-square test-statistic with respect to a desired set of samples. It will also calculate the postfit covariance matrix, and produce the best fit histograms, as well as storing a lot of information about the fit. The fitting itself is carried out by MINUIT by default. Again, NUISANCE isn't re-inventing the wheel!
-
-To include parameters in the fit, they must be added to the NUISANCE card file with the format:
-```
- <parameter name="MaCCRES" nominal="0" type="genie_parameter"low="-1" high="5" step="0.1" state="FREE" />
-```
-This adds a few more fields to the parameter line(s) of the card file with respect to previous examples:
-*low: the minimum value that the parameter is allowed to take in the fit
-*high: the maximum value that the parameter is allowed to take in the fit
-*step: gives the fitter a hint about how large the expected variation should be, but it will re-optimize the step size itself very quickly
-*state: can be "FREE", meaning it varies in the fit, or "FIX" (default) meaning it is not
-
-Again, you can add any number of parameters and samples to the fit, but the more there are, the more complex the computational problem, and the longer the fit will take to converge. As such, it's challenging to predict how long a fit will take a priori. Note that for each iteration of the fit, NUISANCE by default will loop over all events in all of the input files required to process the samples, and calculate a weight for each. It will skip events that don't enter any of the requested samples after the first iteration for speed.
-
-To run a fit with a desired card file, using the `nuismin` program, instead of the usual `nuiscomp` used so far. An example card file for running a simple fit with a single free GENIE parameter `MaCCRES`, and a single MINERvA data sample, is given in `fit_GENIEv3_example.card`, which can be processed with:
-```
-apptainer exec nuisance_nustec2026.sif nuismin -c fit_GENIEv3_example.card -o fit_GENIEv3_example.root
-```
-
-The output file `fit_GENIEv3_example.root` contains a lot of the same information we saw in the simpler NUISANCE output files, with some additions/modifications:
-* `<sample_name>_MC`: as before, but it now contains the best-fit histogram!
-* `fit_iterations`: a ROOT TTree containing entires for each iteration of the fit, including the chi-square for each sample included and the parameter values
-* `fit_result`: a ROOT TTree with summary information describing the fit configuration and the best-fit information
-* `covariance` (`covariance_free`): the covariance matrix between postfit parameters (with fixed parameters removed)
-* `correlation` (`correlation_free`): the correlation matrix between postfit parameters (with fixed parameters removed)
-* `decomposition` (`decomposition_free`): the Cholesky decomposition of the covariance matrix between postfit parameters (with fixed parameters removed)
-* +Various summary histograms which are simple copies of information in the `fit_result` tree
-
-where `<sample_name>` is `MINERvA_CC1pip_XSec_1DTpi_nu_2017`, in this example.
