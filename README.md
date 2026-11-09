@@ -66,6 +66,7 @@ Note that, as for apptainer, in addition to the 1.2GB .sif file, this will add ~
 ```
 singularity cache list
 singularity cache clear
+```
 
 Run a program, or open an interactive shell, with:
 ```
