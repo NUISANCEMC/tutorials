@@ -158,8 +158,11 @@ if __name__ == "__main__":
         16, -16, 14, -14, 12, -12, ## Also ignore outgoing neutrinos
     ]
 
+
+    ## This just remaps all k0 pdgs to a single code
+    ## Essentially the same as assuming CP-conservation here, which is a pretty good approximation for our purposes...
     map_pdg = {
-        311: [130, 310, -311, 311], ## Remap all k0 pdgs to a single code
+        311: [130, 310, -311, 311],
     }
     
     plot_pdg_frequencies(
