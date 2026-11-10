@@ -72,90 +72,18 @@ which performs the event selection (here one mu- and one pi+), and saves the ind
 The particle codes follow the PDG standard, documented in https://pdg.lbl.gov/2020/reviews/rpp2020-rev-monte-carlo-numbering.pdf for example.
 
 ### Making simple data--MC comparisons
-There are a number of NUISANCE utilities for different purposes, but most of what will be needed in this project can be accomplished with `nuiscomp`, which essentially takes the output from the generators and makes an appropriate comparison to published data. Extensive documentation can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html, and you will need to refer to it for more complex uses (e.g., fitting variable parameters).
 
-A simple example XML card file input to `nuiscomp` is given by `nominal_GENIEv3_example.sh`, which can be run with:
-```
-apptainer exec nuisance_nustec2026.sif nuiscomp -c nominal_GENIEv3_example.card -o nominal_GENIEv3_example.root
-```
-In this example, data and the GENIEv3 files generated above are compared for four MINERvA low energy measurements, you can include as many different measurements as you want in each NUISANCE card file **as long as all use the same input generator**. You just have to ensure that you use the correctly generated event file for each flux--target pair!
+NUISANCE can also compare generators to an array of included datasets, using the `nuiscomp` executable. 
 
-The MINERvA measurements included are:
-* `MINERvA_CC0pinp_STV_XSec_1Dpmu_nu`
-  + [PRL 121 (2018) 2, 022504](https://inspirehep.net/literature/1673175) (supplementary material)
-  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CC0pinp_STV_XSec_1D_nu.cxx`
-* `MINERvA_CC1pip_XSec_1DTpi_nu_2017`
-  + New data provided here https://minerva.fnal.gov/pion-data-release-page/ for an update of the [PRD 92, 092008 (2015)](https://inspirehep.net/literature/1303106) analysis
-  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pip_XSec_1D_2017Update.cxx`
-* `MINERvA_CC1pi0_XSec_1DTpi_nu`
-  + [PRD 96 (2017) 7, 072003](https://inspirehep.net/literature/1615865) (Fig. 12)
-  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CC1pi0_XSec_1D_nu.cxx:`
-* `MINERvA_CCinc_XSec_2DEavq3_nu`
-  + [PRL 116 (2016) 071802](https://inspirehep.net/literature/1405301) (Fig. 2)
-  + Source code in `${NUISANCE}/src/MINERvA/MINERvA_CCinc_XSec_2DEavq3_nu.cxx`
+This requires NUISANCE to be set up, for instance through containers as described in the [main readme](../README.md#getting-and-using-the-tutorial-containers). 
 
-You can update the card to use NEUT or NuWro by updating each line from, e.g.:
-```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="GENIE:MC_outputs/GENIEv3_AR23_MINERvA_LE_FHC_numu_NUIS.root"/>
-```
-to either:
-```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NuWro:MC_outputs/NUWROv25.11.1_MINERvA_LE_FHC_numu.root"/>
-```
-or:
-```
-<sample name="MINERvA_CC0pinp_STV_XSec_1Dpmu_nu"  input="NEUT:MC_outputs/NEUT592_MINERvA_LE_FHC_numu.root"/>
-```
+Otherwise, the data--MC comparisons follow the same convention as listed there, except the generator name is replaced by `FLATTREE`, so a card would read
 
-To see all the measurements available, you can run the `nuissamples` executable, and it will tell you all the measurements it knows about. The source code for NUISANCE can be found here: https://nuisance.hepforge.org/tutorials/nuiscomp.html for future reference.
-
-Other tags can be added to the card file to change the NUISANCE behaviour. Two have been added in this case:
 ```
-<config UseSVDInverse="1" />
+<nuisance>
+  <sample name="T2K_CC1pip_CH_XSec_1Dppi_nu"  input="FLATTREE:scripts/MC_outputs/T2KND_FHC_numu_C8H8_NUWROv25.3.1_1M_0000_NUISFLAT.root"/>
+</nuisance>
 ```
-If run without this line, *for these measurement* NUISANCE will refuse to run because the covariance matrix provided with the data is not invertible. This line forces NUISANCE to *approximate* the inversion using Singular Value Decomposition. This might seem drastic, and maybe is, but is extremely common. Most matrices provided by experiments are not invertible!
-```
-<config drawopts="MC|DATA|COV|INVCOV" />
-```
-This controls the outputs that are saved by NUISANCE, but this is more than enough for our purposes here.
-
-### Analyzing the NUISANCE output
-The output of NUISANCE executables contains a lot of information in a ROOT data format. You can open up the file and look at the contents through the ROOT interactive command prompt with:
-```
-apptainer exec nuisance_nustec2026.sif root -l <file_name.root>
-```
-And then explore the file with the ROOT TBrowser GUI with:
-```
-TBrowser b
-```
-**Note that this opens up a GUI, and will be extremely slow if you do it over a remote connection. This will work seamlessly for apptainer, but possibly not for docker where X11 forwarding is... less seamless**
-
-Alternatively, you could install ROOT on your local machine and use it to analyze the output files if you prefer. The NUISANCE output has no dependencies at all, you can open the files and explore them on any machine which has ROOT installed.
-
-Inside the file you'll find a number of ROOT objects:
-* `likelihood_hist`: the chi-square calculated between the data and MC, summarized for all samples
-* `ndof_hist`: the number of degrees of freedom for each data sample, summarized
-* `likedivndof_hist`: the ratio of the two above
-* `<sample_name>_data`: the real data provided by an experiment
-* `<sample_name>_MC`: the Monte Carlo prediction suitable to compare with the data
-* `<sample_name>_COV`: the covariance between data points (again provided by the experiment)
-* `<sample_name>_INVCOV`: the inverse of the covariance (note that with SVD included, this is not exact!)
-* `<sample_name>_Chi2NMinusOne`: the chi-square calculated between data and MC if bin x is omitted from the calculation
-* **2D only** `<sample_name>_data_1D`: the real data provided by an experiment linearized to form a 1D histogram
-* **2D only** `<sample_name>_MC_1D`: the Monte Carlo prediction linearized to form a 1D histogram
-(Where `<sample_name>` can be any of the samples requested in the card file)
-
-There are two example scripts for producing a simple plot comparing data and simulation for the 1D datasets produced using the example NUISANCE card file above. The scripts produce identical plots, but one is written for python, the other is in C++, although note that the latter is actually interpreted but a C++ interpreter ROOT users (from ROOT v6, it is actually compiled with a just in time compiler). These can be run with:
-```
-apptainer exec  nuisance_nustec2026.sif python3 nominal_plotter.py
-```
-Or:
-```
-apptainer exec  nuisance_nustec2026.sif root -q -l -b nominal_plotter.C
-```
-The output image in both cases is a png image for each sample we we asked for, e.g. `nominal_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
-
-It is also possible to make a similar plot with the linearized 2D data and prediction with small tweak to the plotting script, or it can just be inspected in the `TBrowser`.
 
 ### More advanced usage and features
 
