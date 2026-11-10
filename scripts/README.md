@@ -71,13 +71,13 @@ which performs the event selection (here one mu- and one pi+), and saves the ind
 
 The particle codes follow the PDG standard, documented in https://pdg.lbl.gov/2020/reviews/rpp2020-rev-monte-carlo-numbering.pdf for example.
 
-### Data--MC comparisons with flat trees
+### Data-MC comparisons with flat trees
 
 NUISANCE can also compare generators to an array of included datasets, using the `nuiscomp` executable. 
 
-This requires NUISANCE to be set up, for instance through containers as described in the [main readme](../README.md#getting-and-using-the-tutorial-containers). 
+This requires NUISANCE to be set up, for instance through containers as described in the [section in the main readme](../README.md#getting-and-using-the-tutorial-containers). 
 
-Otherwise, the data--MC comparisons follow the same convention as listed there, except the generator name is replaced by `FLATTREE`, so a card would read
+Otherwise, the data-MC comparisons follow the same convention as listed there, except the generator name is replaced by `FLATTREE`, so a card would read
 
 ```
 <nuisance>
@@ -90,10 +90,10 @@ Otherwise, the data--MC comparisons follow the same convention as listed there, 
 That's as far as the flat-trees can take you. If you want more advanced features, like
 
 * General event reweighting
-* Fitting generator parameters (e.g. M_A^{QE}) to external data
+* Fitting generator parameters (e.g. M<sub>A</sub><sup>QE</sup>) to external data
 * Studies of the impact of systematic parameters on generator predictions
 
-you will need to interface with the generators' reweighting engines and use generator output through NUISANCE, as described in the main [README.md](../README.md#analyzing-the-nuisance-output).
+you will need to interface with the generators' reweighting engines and use generator output through NUISANCE, as described in the [section in the main readme](../README.md#analyzing-the-nuisance-output).
 
 
 
