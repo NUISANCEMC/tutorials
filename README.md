@@ -352,7 +352,7 @@ The histogram produced in `gibuu_weights.pdf` shows some interesting features. O
 
 If you have trouble generating one or more of the files from the event generation stage, but still want to explore them or run analysis script, all of the outputs are available [here](https://portal.nersc.gov/project/nuisance/tutorial).
 
-Which can all be downloaded with:
+Which total ~600 MB, and can all be downloaded with:
     
 ```
 wget -r -np -nd -A '*.root' -P ./MC_outputs https://portal.nersc.gov/project/nuisance/tutorial
