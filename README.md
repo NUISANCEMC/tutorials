@@ -100,9 +100,10 @@ An important caveat is that you don't have access to anywhere on the host machin
 
 Or open a shell:
 ```
-docker run --rm -v $(pwd):/output -w /output \
-    wilkinsonnu/nuisancemc:tutorial bash
+docker run --rm -it -v $(pwd):/output -w /output wilkinsonnu/nuisancemc:tutorial
 ```
+(the additional `-it` keeps stdin open and allocates a pseudo-terminal)
+
 Type `exit` to leave the shell. When running these commands, your current working directory will be available in the container. **Changes to files in your current work directory persist on your computer**, even though `--rm` removes the temporary container when it exits. Files elsewhere on your computer are not available unless you mount them separately.
 
 **macOS notes:**
