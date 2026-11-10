@@ -15,9 +15,18 @@ gStyle.SetPadTickX(1)
 gStyle.SetPadTickY(1)
 gStyle.SetErrorX(0)
 
-def get_pdg_counts(fname, omit=()):
+def get_pdg_counts(fname, omit=(), map_pdg=None):
     omit = set(omit)
+    map_pdg = map_pdg or {}
 
+
+    # Invert the mapping for efficient lookup
+    pdg_map = {
+        pdg: target
+        for target, pdgs in map_pdg.items()
+        for pdg in pdgs
+    }
+    
     f = TFile.Open(fname)
     tree = f.Get("FlatTree_VARS")
     tree.SetBranchStatus("*", 0)
@@ -33,7 +42,13 @@ def get_pdg_counts(fname, omit=()):
         
         for k in range(n):
             p = int(pdgs[k])
+
+            ## Optionally skip some PDG codes
             if p in omit: continue
+
+            ## Optionally remap PDG codes
+            p = pdg_map.get(p, p)
+            
             counts[p] = counts.get(p, 0) + w
 
     f.Close()
@@ -45,9 +60,11 @@ def plot_pdg_frequencies(files,
                          normalize=False,
                          group_width=0.8,
                          omit=(),
-                         use_names=False):
+                         map_pdg={},
+                         plot_name="plots/pdg_frequencies.pdf"):
+
     # Get counts per file
-    counts_per_file = [get_pdg_counts(f, omit) for f in files]
+    counts_per_file = [get_pdg_counts(f, omit, map_pdg) for f in files]
 
     # Union of all PDG codes across every file, sorted
     all_pdgs = sorted(set().union(*[c.keys() for c in counts_per_file]))
@@ -108,7 +125,7 @@ def plot_pdg_frequencies(files,
     leg .Draw()
 
     can .RedrawAxis()
-    can .SaveAs("plots/pdg_frequencies.pdf")
+    can .SaveAs(plot_name)
 
 
 if __name__ == "__main__":
@@ -131,4 +148,25 @@ if __name__ == "__main__":
         name_list,
         normalize=True,
         omit=omit_pdgs,
+        plot_name="plots/pdg_frequencies.pdf",
+    )
+
+
+    omit_pdgs = [
+        2000000101, ## GENIE uses this as a nuclear remnant placeholder
+        1000060120, ## Carbon nucleus
+        16, -16, 14, -14, 12, -12, ## Also ignore outgoing neutrinos
+    ]
+
+    map_pdg = {
+        311: [130, 310, -311, 311], ## Remap all k0 pdgs to a single code
+    }
+    
+    plot_pdg_frequencies(
+        file_list,
+        name_list,
+        normalize=True,
+        omit=omit_pdgs,
+        map_pdg=map_pdg,
+        plot_name="plots/pdg_frequencies_reduced.pdf",
     )
