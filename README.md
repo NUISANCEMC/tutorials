@@ -35,7 +35,10 @@ Note that in addition to the .sif file, this will add ~1.5 GB to the apptainer c
 apptainer cache list
 apptainer cache clear
 ```
-**Note that you can run apptainer on a Fermilab GPVM, but the typical disk quotas may be challenging to fit both the .sif file and the cache in...**
+**Note that you can run apptainer on a Fermilab GPVM, but the typical disk quotas may be challenging to fit both the .sif file and the cache in. As a bit of a hack, if you can only use a GPVM, you can also get an apptainer container with the following:**
+```
+wget https://portal.nersc.gov/project/nuisance/tutorial/nuisance_nustec2026.sif
+```
 
 To run a program from the image:
 ```
