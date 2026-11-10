@@ -42,7 +42,7 @@
 &input
       numEnsembles=_NUM_ENSEMBLES_        ! for C12 you can use 4000, for heavier nuclei should be lower; decrease it if there are problems with memory,
       eventtype=5               ! 5=neutrino
-      numTimeSteps=120          ! the distance numTimeSteps*delta_T (100*0.2=20 fm in this example) should significantly exceed the radius of the target nucleus
+      numTimeSteps=60          ! the distance numTimeSteps*delta_T (100*0.2=20 fm in this example) should significantly exceed the radius of the target nucleus
       delta_T=0.2               ! timestep for hadron propagation [fm]
       fullensemble  = T         ! ENGAGE SNAIL MODE
       localEnsemble = T
