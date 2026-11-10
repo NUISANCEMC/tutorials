@@ -346,6 +346,20 @@ The histogram produced in `gibuu_weights.pdf` shows some interesting features. O
 
 </details>
 
+<details>
+
+<summary><h3>Pre-made files</h3></summary>
+
+If you have trouble generating one or more of the files from the event generation stage, but still want to explore them or run analysis script, all of the outputs are available [here](https://portal.nersc.gov/project/nuisance/tutorial).
+
+Which can all be downloaded with:
+    
+```
+wget -r -np -nd -A '*.root' -P ./MC_outputs https://portal.nersc.gov/project/nuisance/tutorial
+```
+    
+</details>
+
 ## NUISANCE
 
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, converts them internally into a common format, and compares the generator predictions to measured data and other generators. 
