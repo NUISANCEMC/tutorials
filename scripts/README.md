@@ -1,6 +1,6 @@
-### Using the NUISANCE flat trees
+## Using the NUISANCE flat trees
 
-#### Background
+### Background
 The NUISANCE flat trees provide a simple common flat tree format which is the same for all generators. This makes it very easy to compare features of different generators, and explore the physics that is implemented in them.
 
 The flat trees have pre-calculated variables and fundamental interaction variables, like Q<sup>2</sup> (four-momentum transfer squared), W (hadronic mass), E<sub>ν</sub> (neutrino energy), the target nucleus and nucleon PDG codes, and the full particle stack before the interaction, after the nucleon interaction, and after the final state interactions.
@@ -19,7 +19,7 @@ root -l 'name_of_script.cpp("INPUT_FLATTREE_FILE.root")'
 ```
 and optional arguments can be given (see the source files).
 
-#### Pre-made flat-tree files
+### Pre-made flat-tree files
 In addition to running the generators via containers, you can do analyses on the pre-generated flat-trees that have been prepared. 
 
 We host TBs of pre-generated files at NERSC, and here you'll download a small subset of them, which is enough to get you started. 
@@ -32,7 +32,7 @@ These can be obtained by running the script:
 ```
 You can extend the script to download more files, other generators, and other flux and target combinations.
 
-#### Simple analysis using `TTree::Draw`
+### Simple analysis using `TTree::Draw`
 An example script using simple `TTree::Draw` commands has been provided in [`flat_bymode.cpp`](flat_bymode.cpp). This script draws the distribution of a variable in the flat-tree, both the total charged-current contribution, and the contribution from each of the interaction modes.
 
 The central part of the script is
@@ -50,7 +50,7 @@ which first draws each of the interaction modes, and then draws all interaction 
 
 We will go over a few examples using and extending this script in the lectures.
 
-#### Analysis using the particle stack
+### Analysis using the particle stack
 Two examples drawing from the full particle stack are also provided, see [`flat_calo_bias.cpp`](flat_calo_bias.cpp) and [`flat_pion_mom.cpp`](flat_pion_mom.cpp). Here, the central part is the looping over the final state particle stacks:
 ```
     for (int j = 0; j < nfsp; ++j) {
