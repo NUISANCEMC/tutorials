@@ -51,4 +51,5 @@ rm main.run \
    MINERvA_LE_numu_GiBUU_C12.job \
    MINERvA_LE_numu_GiBUU_H1.job \
    ReAdjust.PlotPot.010.dat \
+   massass_nBody.dat \
    EventOutput.Pert.00000001.root
