@@ -35,7 +35,10 @@ Note that in addition to the .sif file, this will add ~1.5 GB to the apptainer c
 apptainer cache list
 apptainer cache clear
 ```
-**Note that you can run apptainer on a Fermilab GPVM, but the typical disk quotas may be challenging to fit both the .sif file and the cache in...**
+**Note that you can run apptainer on a Fermilab GPVM, but the typical disk quotas may be challenging to fit both the .sif file and the cache in. As a bit of a hack, if you can only use a GPVM, you can also get an apptainer container with the following:**
+```
+wget https://portal.nersc.gov/project/nuisance/tutorial/nuisance_nustec2026.sif
+```
 
 To run a program from the image:
 ```
@@ -100,9 +103,10 @@ An important caveat is that you don't have access to anywhere on the host machin
 
 Or open a shell:
 ```
-docker run --rm -v $(pwd):/output -w /output \
-    wilkinsonnu/nuisancemc:tutorial bash
+docker run --rm -it -v $(pwd):/output -w /output wilkinsonnu/nuisancemc:tutorial
 ```
+(the additional `-it` keeps stdin open and allocates a pseudo-terminal)
+
 Type `exit` to leave the shell. When running these commands, your current working directory will be available in the container. **Changes to files in your current work directory persist on your computer**, even though `--rm` removes the temporary container when it exits. Files elsewhere on your computer are not available unless you mount them separately.
 
 **macOS notes:**
@@ -342,6 +346,20 @@ The histogram produced in `gibuu_weights.pdf` shows some interesting features. O
 
 </details>
 
+<details>
+
+<summary><h3>Pre-made files</h3></summary>
+
+If you have trouble generating one or more of the files from the event generation stage, but still want to explore them or run analysis script, all of the outputs are available [here](https://portal.nersc.gov/project/nuisance/tutorial).
+
+Which can all be downloaded with:
+    
+```
+wget -r -np -nd -A '*.root' -P ./MC_outputs https://portal.nersc.gov/project/nuisance/tutorial
+```
+    
+</details>
+
 ## NUISANCE
 
 [NUISANCE](https://nuisance.hepforge.org) is a conceptually simple package that takes the output of event generators, converts them internally into a common format, and compares the generator predictions to measured data and other generators. 
@@ -483,20 +501,20 @@ To include a parameter variation, a line can be added to the NUISANCE card file 
 ```
 where this changes the value of a "genie_parameter" (meaning [GENIEReWeight](https://github.com/GENIE-MC/Reweight)) called "MaCCRES" (the axial mass value for the CC-resonant axial form factor), to -0.5, where the meaning of -0.5 is interpreted by the reweighting package.
 
-In the case of GENIE, and most other reweighting packaged, the reweighted dial value can be calculated with $V = N \times (1 + R \times S)$ where $V$ is the new value, $N$ is the nominal value, $R$ is the reweighting factor (e.g. -0.5 in this example), and $S$ is the $\pm$1 $\sigma$ shift value. It can be challenging to look up $N$ and $S$, and generally requires generator specific knowledge.
+In the case of GENIE, and most other reweighting packaged, the reweighted dial value can be calculated with $V = N \times (1 + R \times S)$ where $V$ is the new value, $N$ is the nominal value, $R$ is the reweighting factor (e.g. -0.5 in this example), and $S$ is the $\pm\sigma$ shift value. It can be challenging to look up $N$ and $S$, and generally requires generator specific knowledge.
 
 These may also change based on the model used to initially generate the events, which must be known at runtime. For the case of GENIE, this means telling NUISANCE what GENIE tune was used (which then tells GENIERW how to configure itself), by adding a line to the card file, for example:
 ```
  <config GENIETune="AR23_20i_00_000" />
  ```
-You can look up these values in `$GENIE/config`. For example, you can find the $\pm$1 $\sigma$ shift values from `${GENIE}/config/GSystUncertaintyTable.xml`, and the nominal value from `$GENIE/config/AR23_20i/CommonParam.xml`, where only the latter is tune-specific.
+You can look up these values in `$GENIE/config`. For example, you can find the $\pm 1 \sigma$ shift values from `${GENIE}/config/GSystUncertaintyTable.xml`, and the nominal value from `$GENIE/config/AR23_20i/CommonParam.xml`, where only the latter is tune-specific.
 
 Finally, one can also change the meaning of the dial value change to be as a fraction of the initial value by adding the following line to the NUISANCE card file:
 ```
 <config setabstwk="1" />
 ```
 
-To see the utility of this reweighting in action, there are two example card files, with a positive and negative 1$\sigma$ shift to `MaCCRES` which can generate output with the commands:
+To see the utility of this reweighting in action, there are two example card files, with a positive and negative $1\sigma$ shift to `MaCCRES` which can generate output with the commands:
 ```
 apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_negMaCCRES_GENIEv3_example.card -o dialvar_negMaCCRES_GENIEv3_example.root
 apptainer exec nuisance_nustec2026.sif nuiscomp -c dialvar_posMaCCRES_GENIEv3_example.card -o dialvar_posMaCCRES_GENIEv3_example.root
@@ -510,7 +528,7 @@ Or:
 ```
 apptainer exec  nuisance_nustec2026.sif root -q -l -b dial_validation_plotter.C
 ```
-The output image in both cases is a png image showing how the $\pm$1$\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
+The output image in both cases is a png image showing how the $\pm 1\sigma$ shift in GENIE's `MaCCRES` dial modifies the prediction for each sample made in the above files. E.g. `validation_MaCCRES_MINERvA_CC1pi0_XSec_1DTpi_nu_GENIEv3.png`. These scripts also don't have any dependencies in the container, so can be run with a local ROOT installation, or with python locally as long as PyROOT has been enabled.
 
 Any number of parameters can be set, as long as they can be applied to the samples included in the card file. For example, you might want to include reweightale parameters from GENIE, and also include reweighting parameters in experiment-specific reweighting packages which are designed to work with GENIE. Each dial will calculate a weight for some or all events --- when multiple dials are included, the weight that will be stored for each event (and used to fill the summary histograms we're looking at in the example), will be the product of the weights from each dial.
 </details>
