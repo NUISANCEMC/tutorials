@@ -22,6 +22,7 @@ For these tutorials, we have a docker *container* which is hosted on dockerhub a
 You _do_ need a container runtime environment to run the container, either on your laptop or a system you have access to. Docker, Apptainer, and SingularityCE can all run this image, and you only need one of those runtimes. Apptainer and SingularityCE are common on shared Linux computing systems. Docker Desktop is usually the more straightforward choice on macOS. If you are using a University cluster or HPC, check which runtime it provides before trying to install one yourself. There may be a home-grown container runtime (e.g., shifter at NERSC), which should also be fine, although specific instructions are not provided.
 
 <details>
+    
 <summary><h3>Apptainer (Linux and many computing clusters)</h3></summary>
 
 Follow your institution’s instructions if Apptainer is already provided, or see the [Apptainer user guide](https://apptainer.org/docs/user/latest/).
@@ -51,10 +52,12 @@ To explore the container interactively:
 apptainer shell nuisance_nustec2026.sif
 ```
 Type `exit` to leave the shell. The image itself is read-only, but **your mounted tutorial files are not**: commands in the container can change or delete them.
+
 </details>
 
 
 <details>
+    
 <summary><h3>SingularityCE (Linux and some computing clusters)</h3></summary>
 
 If your system provides a `singularity` command rather than `apptainer`, you can use the same Docker Hub image. See the [SingularityCE user guide](https://docs.sylabs.io/guides/latest/user-guide/) if you need installation or background information.
@@ -64,22 +67,22 @@ From the `nuisance_tutorials` directory:
 singularity pull nuisance_nustec2026.sif docker://wilkinsonnu/nuisancemc:tutorial
 ```
 Note that, as for apptainer, in addition to the 1.2GB .sif file, this will add ~1.5 GB to the singularity cache, which is not necessary after building the file. You can inspect the cache and clear it with:
+
 ```
 singularity cache list
 singularity cache clear
 ```
-
 Run a program, or open an interactive shell, with:
 ```
 singularity exec nuisance_nustec2026.sif <program> <arguments>
 singularity shell nuisance_nustec2026.sif
 ```
-
 For the examples later in the tutorial, you can replace `apptainer` with `singularity`. As with Apptainer, the image is read-only but files in the mounted tutorial directory can be changed. Type `exit` to leave an interactive shell.
+
 </details>
 
-
 <details>
+    
 <summary><h3>Docker (macOS, Linux, or Windows with WSL)</h3></summary>
 
 ### Docker
@@ -89,7 +92,6 @@ Docker downloads the image automatically the first time you run it. You can also
 ```
 docker pull wilkinsonnu/nuisancemc:tutorial
 ```
-
 From the `nuisance_tutorials` directory, run a program with:
 ```
 docker run --rm -v $(pwd):/output -w /output \
@@ -132,11 +134,7 @@ use the following equivalent if you chose Docker:
 docker run --rm -v $(pwd):/output -w /output \
     wilkinsonnu/nuisancemc:tutorial <program> <arguments>
 ```
-</details>
 
-<details>
-    <summary><h3>Building containers</h3></summary>
-    Although not part of this tutorial, if anybody is interested in developing generators or building on another system, our container recipes, built using docker, are all available in: https://github.com/wilkinson-nu/nuisance_containers.
 </details>
 
 ## Running the event generation packages
@@ -321,6 +319,12 @@ Important parameters you will need to control in the NEUT card files:
 * `NEUT-NUMATOM`: total number of nucleons (it's redundant but has to be set)
 `neutroot2` is not able to simulate complex molecular targets, just single elements with additional hydrogen components, but that's sufficient for most purposes. Alternative event generation applications are provided to generate events with more complex targets and geometries.
 
+For more advanced usage, a full readme documenting the structure and options of a card file can be found inside the container, in the `${NEUT_CARDS}/README.CARD` location, which you can view by running
+
+```
+apptainer exec nuisance_nustec2026.sif cat /opt/generators/neut/build/Linux/share/neut/Cards/README.CARD
+```
+
 </details>
 
 ### GiBUU
@@ -353,7 +357,6 @@ The histogram produced in `gibuu_weights.pdf` shows some interesting features. O
 If you have trouble generating one or more of the files from the event generation stage, but still want to explore them or run analysis script, all of the outputs are available [here](https://portal.nersc.gov/project/nuisance/tutorial).
 
 Which total ~600 MB, and can all be downloaded with:
-    
 ```
 wget -r -np -nd -A '*.root' -P ./MC_outputs https://portal.nersc.gov/project/nuisance/tutorial
 ```
