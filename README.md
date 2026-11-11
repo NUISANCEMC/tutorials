@@ -134,7 +134,11 @@ use the following equivalent if you chose Docker:
 docker run --rm -v $(pwd):/output -w /output \
     wilkinsonnu/nuisancemc:tutorial <program> <arguments>
 ```
+</details>
 
+<details>
+<summary><h4>Building containers</h4></summary>
+Although not part of this tutorial, if anybody is interested in developing generators or building on another system, our container recipes, built using docker, are all available in: https://github.com/wilkinson-nu/nuisance_containers.    
 </details>
 
 ## Running the event generation packages
