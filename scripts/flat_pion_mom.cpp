@@ -23,6 +23,9 @@ void flat_pion_mom(std::string filename) {
   // The number of final state particles in an event
   int nfsp;
 
+  // Weight to account for GiBUU nominal weights
+  float weight;
+
   // Turn off all branches and selectively turn on those that we use
   // This makes reading the TTree significantly faster
   tree->SetBranchStatus("*", false);
@@ -40,6 +43,8 @@ void flat_pion_mom(std::string filename) {
   tree->SetBranchAddress("Mode", &Mode);
   tree->SetBranchStatus("nfsp", true);
   tree->SetBranchAddress("nfsp", &nfsp);
+  tree->SetBranchStatus("Weight", true);
+  tree->SetBranchAddress("Weight", &weight);
 
   // Get the scaling to a cross section
   tree->SetBranchStatus("fScaleFactor", true);
@@ -47,7 +52,7 @@ void flat_pion_mom(std::string filename) {
   tree->SetBranchStatus("fScaleFactor", false);
 
   // The the number of modes that the file contains
-  int nModes = tree->GetMaximum("Mode");
+  int nModes = tree->GetMaximum("Mode")+1;
 
   // The array of histogram pointers: one per mode
   TH1D **ppi = new TH1D*[nModes];
@@ -95,8 +100,8 @@ void flat_pion_mom(std::string filename) {
     double ptot = sqrt(px[PiIndex]*px[PiIndex]+py[PiIndex]*py[PiIndex]+pz[PiIndex]*pz[PiIndex]);
 
     // Fill the histograms
-    ppi[Mode]->Fill(ptot);
-    ppit->Fill(ptot);
+    ppi[Mode]->Fill(ptot, weight);
+    ppit->Fill(ptot, weight);
   }
 
   // Onwards is just drawing and plot cosmetics

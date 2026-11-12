@@ -18,6 +18,8 @@ void flat_calo_bias(std::string filename) {
   int Mode;
   int nfsp;
 
+  float weight;
+
   tree->SetBranchStatus("*", false);
   tree->SetBranchStatus("E", true);
   tree->SetBranchAddress("E", E);
@@ -39,6 +41,8 @@ void flat_calo_bias(std::string filename) {
   tree->SetBranchAddress("Enu_true", &Enu_true);
   tree->SetBranchStatus("q0", true);
   tree->SetBranchAddress("q0", &q0);
+  tree->SetBranchStatus("Weight", true);
+  tree->SetBranchAddress("Weight", &weight);
 
   tree->SetBranchStatus("CosLep", true);
   tree->SetBranchAddress("CosLep", &CosLep);
@@ -95,7 +99,7 @@ void flat_calo_bias(std::string filename) {
     // Example of other biases
     //double bias = (Eavail-q0)/q0;
     //double bias = Eavail/q0;
-    hist[Mode]->Fill(bias);
+    hist[Mode]->Fill(bias, weight);
   }
 
   bool drawn = false;

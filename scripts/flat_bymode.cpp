@@ -13,7 +13,7 @@ void flat_bymode(std::string filename, std::string variable="Enu_true") {
 
   // Set the number of modes that we are going to loop over to produce plots which are split by true interaction mode
   // This is equivalent to all CC modes
-  const int nModes = 30;
+  int nModes = tree->GetMaximum("Mode")+1;
   // The scale factor we use to convert "number of events in the tree" to a differential cross section
   double scale = tree->GetMaximum("fScaleFactor");
 
@@ -28,7 +28,7 @@ void flat_bymode(std::string filename, std::string variable="Enu_true") {
   for (int i = 0; i < nModes; ++i) {
     // We draw the variables "W" from the tree into ">>" the "h%i"th object, where i is the Nth mode. 
     // We use 50 bins between 0.5 and 3 GeV/c2 "(50,0.5,3), and make a selection that the true interaction mode is the number i "(Form("Mode==%i", i))"
-    tree->Draw(Form("%s>>h%i(%s)", variable.c_str(), i, binning.c_str()), Form("Mode==%i", i));
+    tree->Draw(Form("%s>>h%i(%s)", variable.c_str(), i, binning.c_str()), Form("Weight*(Mode==%i)", i));
     // Retrieve the drawn object
     w[i] = (TH1D*)gDirectory->Get(Form("h%i", i));
     // Set a useful title
@@ -36,11 +36,10 @@ void flat_bymode(std::string filename, std::string variable="Enu_true") {
   }
 
   // Draw the W distribution without any selection on a particular mode; include all modes below nModes (this is all CC)
-  tree->Draw(Form("%s>>h00(%s)", variable.c_str(), binning.c_str()), Form("Mode<%i", nModes));
+  tree->Draw(Form("%s>>h00(%s)", variable.c_str(), binning.c_str()), Form("Weight*(Mode<%i)", nModes));
   TH1D *h0 = (TH1D*)gDirectory->Get("h00");
   // Scale the histogram from number of events to a differential cross section in the x-axis variable (in this case, W)
   h0->Scale(scale, "width");
-
 
   // A variable to keep track of if we've drawn a histogram yet or not
   bool drawn = false;
